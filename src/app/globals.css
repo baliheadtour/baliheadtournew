@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1C1C1E;
+  /* Deep dark grey/black used in the reference UI */
+  --color-primary-inverse: #ffffff;
+
+  /* Redesign Signature Lime Accent */
+  --color-accent: #D9FB41;
+  --color-accent-hover: #C5E838;
+
+  --color-background: #F8F9FA;
+  /* Slightly off-white for contrast with white cards */
+  --color-surface: #FFFFFF;
+  --color-dark-surface: #2D2F33;
+  /* Dark floating elements */
+
+  --color-text-primary: #1C1C1E;
+  --color-text-secondary: #8A8E9B;
+  --color-border: #E8EAEF;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --shadow-floating: 0 10px 40px rgba(0, 0, 0, 0.15);
+  /* For float widgets */
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Enhanced Radii for App-like feel */
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 2rem;
+  --radius-4xl: 2.5rem;
+  --radius-pill: 9999px;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Newsletter Article Typography */
+  .newsletter-content {
+    @apply text-lg leading-[1.8] text-[#475569] font-serif;
+  }
+
+  .newsletter-content h1,
+  .newsletter-content h2,
+  .newsletter-content h3,
+  .newsletter-content h4 {
+    @apply font-sans font-black text-primary tracking-tight;
+    color: var(--color-primary);
+  }
+
+  .newsletter-content h2 {
+    @apply text-3xl mt-12 mb-6;
+  }
+
+  .newsletter-content h3 {
+    @apply text-2xl mt-8 mb-4;
+  }
+
+  .newsletter-content p {
+    @apply mb-6;
+  }
+
+  .newsletter-content p:first-of-type::first-letter {
+    @apply text-5xl font-black float-left mr-3 mt-1.5 text-primary font-sans leading-none;
+  }
+
+  .newsletter-content ul {
+    @apply list-disc pl-6 mb-6 space-y-2;
+  }
+
+  .newsletter-content ol {
+    @apply list-decimal pl-6 mb-6 space-y-2;
+  }
+
+  .newsletter-content li {
+    @apply mb-2 pl-2;
+  }
+
+  .newsletter-content strong {
+    @apply font-bold;
+    color: var(--color-primary);
+  }
+
+  .newsletter-content a {
+    @apply text-[#84a900] underline decoration-2 underline-offset-4 hover:text-[#5c7700] transition-colors font-semibold;
+  }
+
+  .newsletter-content blockquote {
+    @apply border-l-4 border-accent pl-6 py-2 my-8 italic text-xl text-primary bg-gray-50 rounded-r-xl;
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent Google Translate from pushing the body down */
+  top: 0 !important;
+}
+
+/* Hide Google Translate UI elements */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.goog-te-combo {
+  display: none !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+.goog-tooltip {
+  display: none !important;
+}
+
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Load the Maps API with the Places Library -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvRg3xJ6dSPKSOwTRSmGUmaEfYRQ5WRCQ&libraries=places"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    setTimeout(async () => {
+      const el = new google.maps.places.PlaceAutocompleteElement();
+      document.getElementById("container").appendChild(el);
+      console.log("KEYS:", Object.keys(el.__proto__));
+      let props = [];
+      for (let p in el) { props.push(p); }
+      console.log("ALL PROPS:", props.filter(p => !p.startsWith('on') && !p.startsWith('_')).join(', '));
+      document.body.innerHTML += "<div id='result'>" + props.filter(p => p.includes('val') || p.includes('input') || p.includes('text')).join(', ') + "</div>";
+    }, 1000);
+  </script>
+</body>
+</html>

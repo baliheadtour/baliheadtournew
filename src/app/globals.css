@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1C1C1E;
-  /* Deep dark grey/black used in the reference UI */
+  --color-primary: #004643;
+  /* Deep dark teal used in the reference UI */
   --color-primary-inverse: #ffffff;
 
-  /* Redesign Signature Lime Accent */
+  /* Redesign Signature Accent (can keep lime or update later, keeping lime for now as it pairs well with teal) */
   --color-accent: #D9FB41;
   --color-accent-hover: #C5E838;
 
   --color-background: #F8F9FA;
   /* Slightly off-white for contrast with white cards */
   --color-surface: #FFFFFF;
-  --color-dark-surface: #2D2F33;
-  /* Dark floating elements */
+  --color-dark-surface: #003633;
+  /* Dark floating elements (adjusted to match teal) */
 
-  --color-text-primary: #1C1C1E;
+  --color-text-primary: #004643;
   --color-text-secondary: #8A8E9B;
   --color-border: #E8EAEF;
 

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { ChevronRight, Calendar } from "lucide-react";
+import { ChevronRight, Calendar, Sparkles } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 

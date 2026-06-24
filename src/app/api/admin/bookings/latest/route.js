@@ -4,13 +4,14 @@ import { createClient } from '@supabase/supabase-js';
 export const runtime = 'edge';
 
 // Initialize Supabase with the SERVICE ROLE KEY (Bypasses RLS)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+const getSupabaseAdmin = () => createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
 export async function GET() {
   // Authentication is now securely handled on the frontend via LocalStorage gate
+  const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from('bookings')
     .select('id, service_name, created_at')

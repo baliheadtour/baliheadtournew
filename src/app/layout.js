@@ -18,27 +18,27 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL("https://www.bobbybaliguide.com"),
-  applicationName: "MyBaliDriver",
+  metadataBase: new URL("https://www.baliheadtour.com"),
+  applicationName: "BaliHeadTour",
   title: {
-    default: "MyBaliDriver | Best Private Drivers & Premium Tours in Bali",
-    template: "%s | MyBaliDriver"
+    default: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
+    template: "%s | BaliHeadTour"
   },
-  description: "Experience the best of Bali and Ubud with MyBaliDriver. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages. Book your unforgettable Bali adventure today!",
+  description: "Experience the best of Bali and Ubud with BaliHeadTour. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages. Book your unforgettable Bali adventure today!",
   keywords: ["Bali Private Driver", "Hire Driver in Bali", "Bali Car Charter", "Premium Bali Tours", "Ubud Day Tour", "Nusa Penida Tour Package", "Bali Airport Transfer", "Custom Bali Itinerary", "Local Bali Guide", "Best Driver in Ubud"],
-  authors: [{ name: "MyBaliDriver" }],
-  creator: "MyBaliDriver",
-  publisher: "MyBaliDriver",
+  authors: [{ name: "BaliHeadTour" }],
+  creator: "BaliHeadTour",
+  publisher: "BaliHeadTour",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "MyBaliDriver | Best Private Drivers & Premium Tours in Bali",
-    description: "Experience the best of Bali and Ubud with MyBaliDriver. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages.",
-    url: "https://www.bobbybaliguide.com",
-    siteName: "MyBaliDriver",
+    title: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
+    description: "Experience the best of Bali and Ubud with BaliHeadTour. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages.",
+    url: "https://www.baliheadtour.com",
+    siteName: "BaliHeadTour",
     images: [
       {
         url: "/og-image.jpg",
@@ -63,8 +63,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "MyBaliDriver | Best Private Drivers & Premium Tours in Bali",
-    description: "Experience the best of Bali and Ubud with MyBaliDriver. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages.",
+    title: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
+    description: "Experience the best of Bali and Ubud with BaliHeadTour. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages.",
     images: ["/og-image.jpg"],
   },
 };
@@ -73,9 +73,9 @@ export default function RootLayout({ children }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "MyBaliDriver",
-    "alternateName": ["My Bali Driver", "Bobby Bali Guide"],
-    "url": "https://www.bobbybaliguide.com/"
+    "name": "BaliHeadTour",
+    "alternateName": ["Bali Head Tour", "Bali Head Tour"],
+    "url": "https://www.baliheadtour.com/"
   };
 
   return (

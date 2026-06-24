@@ -51,8 +51,8 @@ export default function SplashScreen({ children }) {
   useEffect(() => {
     if (!mounted || !showSplash) return;
     if (!isMobile) {
-      setIsReady(true);
-      return;
+      const timer = setTimeout(() => setIsReady(true), 0);
+      return () => clearTimeout(timer);
     }
 
     const MIN_SPLASH_MS = 2000;
@@ -165,7 +165,7 @@ export default function SplashScreen({ children }) {
                 />
                 <img
                   src="/icon.jpg"
-                  alt="MyBaliDriver"
+                  alt="BaliHeadTour"
                   className="w-[88px] h-[88px] rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.08)] object-contain"
                 />
               </div>
@@ -176,7 +176,7 @@ export default function SplashScreen({ children }) {
                 transition={{ delay: 0.35, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className="text-[#1C1C1E] text-[22px] font-black tracking-tight mb-1.5"
               >
-                mybalidriver
+                baliheadtour
               </motion.h1>
 
               <motion.p

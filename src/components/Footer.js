@@ -10,7 +10,7 @@ const Footer = () => {
           
           <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-extrabold tracking-tight flex items-center text-black" style={{ fontFamily: 'var(--font-playfair)' }}>
-              mybalidriver
+              baliheadtour
             </h2>
             <p className="text-sm text-text-secondary">
               Your ultimate premium gateway to explore the magical island of Bali. Discover tours, rentals, and hidden gems seamlessly.
@@ -37,7 +37,7 @@ const Footer = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">Helpful Links</h3>
             <div className="flex flex-col gap-3">
               <Link href="/about" className="text-sm font-medium hover:translate-x-1 hover:text-accent transition-all inline-block w-max">About Us</Link>
-              <Link href="/blog" className="text-sm font-medium hover:translate-x-1 hover:text-accent transition-all inline-block w-max">mybalidriver Blog</Link>
+              <Link href="/blog" className="text-sm font-medium hover:translate-x-1 hover:text-accent transition-all inline-block w-max">baliheadtour Blog</Link>
               <Link href="/contact" className="text-sm font-medium hover:translate-x-1 hover:text-accent transition-all inline-block w-max">Contact & Support</Link>
             </div>
           </div>
@@ -63,7 +63,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-text-secondary">
-            &copy; {new Date().getFullYear()} mybalidriver. All rights reserved.
+            &copy; {new Date().getFullYear()} baliheadtour. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-sm text-text-secondary">
             <span>Powered by Premium Travel Engine</span>

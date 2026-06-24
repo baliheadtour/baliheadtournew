@@ -52,11 +52,11 @@ export default function HeroSettingsModal({ onClose }) {
       const filePath = `campaign_videos/${fileName}`;
 
       const { error } = await supabase.storage
-        .from('discovering_bali_images')
+        .from('baliheadtour_images')
         .upload(filePath, file);
 
       if (error) throw error;
-      const { data: { publicUrl } } = supabase.storage.from('discovering_bali_images').getPublicUrl(filePath);
+      const { data: { publicUrl } } = supabase.storage.from('baliheadtour_images').getPublicUrl(filePath);
 
       setSettings({ ...settings, campaignVideo: publicUrl });
     } catch (err) {

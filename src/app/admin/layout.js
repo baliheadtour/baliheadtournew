@@ -338,7 +338,7 @@ export default function AdminLayout({ children }) {
                    <input type="file" accept="image/*" onChange={handleAvatarUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
                  </div>
                  <div className="text-center">
-                   <h4 className="font-extrabold text-base text-[#1C1C1E]">Bobby Bali Guide</h4>
+                   <h4 className="font-extrabold text-base text-[#1C1C1E]">Bali Head Tour</h4>
                    <p className="text-[11px] text-gray-500 font-bold">bobbybaliguide@gmail.com</p>
                  </div>
                </div>
@@ -381,7 +381,7 @@ export default function AdminLayout({ children }) {
                <div className="flex items-center gap-4 bg-[#F8F9FA] p-4 rounded-2xl border border-[#E8EAEF]">
                  <img src="/icon.jpg" alt="Logo" className="w-12 h-12 rounded-xl object-cover shadow-sm" />
                  <div>
-                   <p className="text-sm font-black text-[#1C1C1E]">MyBaliDriver Admin</p>
+                   <p className="text-sm font-black text-[#1C1C1E]">BaliHeadTour Admin</p>
                    <p className="text-[11px] font-bold text-gray-500">Add to Home Screen</p>
                  </div>
                </div>

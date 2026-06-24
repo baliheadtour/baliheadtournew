@@ -1,8 +1,8 @@
 export default function manifest() {
   return {
-    name: 'MyBaliDriver Admin',
+    name: 'BaliHeadTour Admin',
     short_name: 'AdminPortal',
-    description: 'Management dashboard for MyBaliDriver',
+    description: 'Management dashboard for BaliHeadTour',
     start_url: '/admin',
     display: 'standalone',
     background_color: '#ffffff',

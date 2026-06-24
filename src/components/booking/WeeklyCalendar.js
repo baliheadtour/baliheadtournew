@@ -3,40 +3,35 @@
 import React, { useState, useEffect, useRef } from "react";
 
 export default function WeeklyCalendar({ value, onChange }) {
-  const [dates, setDates] = useState([]);
-  const [currentMonthStr, setCurrentMonthStr] = useState("");
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    // Generate next 60 days starting from today
+  const [dates] = useState(() => {
     const genDates = [];
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // reset time
-
+    today.setHours(0, 0, 0, 0);
     for (let i = 0; i < 60; i++) {
        const d = new Date(today);
        d.setDate(today.getDate() + i);
        genDates.push(d);
     }
-    setDates(genDates);
-    
-    // Only auto-select if value is empty
+    return genDates;
+  });
+
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
     if (!value) {
+       const today = new Date();
        const yyyy = today.getFullYear();
        const mm = String(today.getMonth() + 1).padStart(2, '0');
        const dd = String(today.getDate()).padStart(2, '0');
-       onChange(`${yyyy}-${mm}-${dd}`);
+       onChange?.(`${yyyy}-${mm}-${dd}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-     // update month string based on value
-     const d = value ? new Date(value) : new Date();
-     // Fix timezone offset issues
-     const tzOffset = d.getTimezoneOffset() * 60000;
-     const localDate = new Date(d.getTime() + tzOffset);
-     setCurrentMonthStr(localDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
-  }, [value]);
+  const d = value ? new Date(value) : new Date();
+  const tzOffset = d.getTimezoneOffset() * 60000;
+  const localDate = new Date(d.getTime() + tzOffset);
+  const currentMonthStr = localDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   const handleSelect = (d) => {
      const yyyy = d.getFullYear();

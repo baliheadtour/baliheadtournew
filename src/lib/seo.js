@@ -1,6 +1,6 @@
 import { generateSlug } from "./utils";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.bobbybaliguide.com';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.baliheadtour.com';
 
 export function getSeoDescription(text, maxLength = 160) {
   if (!text) return "Book your premium Bali experience with Discovering Bali.";

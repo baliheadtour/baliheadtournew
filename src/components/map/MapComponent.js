@@ -29,35 +29,34 @@ const LOCATION_CACHE = {
 
 const CATEGORIES = ["Tour", "Transport", "Activities"];
 
-// Inner component for routing logic
 function DirectionsEngine({ routeInfo, setRouteStats }) {
   const map = useMap();
   const routesLib = useMapsLibrary("routes");
-  const [directionsService, setDirectionsService] = useState(null);
-  const [directionsRenderer, setDirectionsRenderer] = useState(null);
+  const directionsServiceRef = useRef(null);
+  const directionsRendererRef = useRef(null);
 
   useEffect(() => {
     if (!routesLib || !map) return;
-    setDirectionsService(new routesLib.DirectionsService());
-    setDirectionsRenderer(new routesLib.DirectionsRenderer({ 
-      map,
-      suppressMarkers: false,
-      polylineOptions: { strokeColor: "#1E1E24", strokeWeight: 4 }
-    }));
-  }, [routesLib, map]);
+    if (!directionsServiceRef.current) {
+      directionsServiceRef.current = new routesLib.DirectionsService();
+      directionsRendererRef.current = new routesLib.DirectionsRenderer({ 
+        map,
+        suppressMarkers: false,
+        polylineOptions: { strokeColor: "#1E1E24", strokeWeight: 4 }
+      });
+    }
 
-  useEffect(() => {
-    if (!directionsService || !directionsRenderer || !routeInfo) return;
+    if (!routeInfo) return;
 
-    directionsService.route(
+    directionsServiceRef.current.route(
       {
         origin: routeInfo.origin,
         destination: routeInfo.destination,
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: window.google.maps.TravelMode.DRIVING,
       },
       (response, status) => {
         if (status === "OK" && response) {
-          directionsRenderer.setDirections(response);
+          directionsRendererRef.current.setDirections(response);
           
           const leg = response.routes[0].legs[0];
           const distKm = typeof leg.distance?.value === "number" ? leg.distance.value / 1000 : 0;
@@ -75,11 +74,13 @@ function DirectionsEngine({ routeInfo, setRouteStats }) {
     );
     
     return () => {
-      if (directionsRenderer) {
-        directionsRenderer.setMap(null);
+      if (directionsRendererRef.current) {
+        directionsRendererRef.current.setMap(null);
+        directionsRendererRef.current = null;
+        directionsServiceRef.current = null;
       }
     }
-  }, [routeInfo, directionsService, directionsRenderer]);
+  }, [routeInfo, routesLib, map, setRouteStats]);
 
   return null;
 }

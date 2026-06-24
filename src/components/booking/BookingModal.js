@@ -31,14 +31,17 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
 
   useEffect(() => {
     if (isOpen) {
-      setStep(startStep);
-      const minP = serviceData?.minPax || 1;
-      setFormData(prev => ({ 
-        ...prev, 
-        guests: String(Math.max(minP, initialPax)),
-        date: initialDate || prev.date
-      }));
-      setLocalPackage(serviceData?.selectedPackage || "Standard");
+      const timer = setTimeout(() => {
+        setStep(startStep);
+        const minP = serviceData?.minPax || 1;
+        setFormData(prev => ({ 
+          ...prev, 
+          guests: String(Math.max(minP, initialPax)),
+          date: initialDate || prev.date
+        }));
+        setLocalPackage(serviceData?.selectedPackage || "Standard");
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [isOpen, initialPax, initialDate, startStep, serviceData]);
 
@@ -48,13 +51,16 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
   };
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-    return () => { document.body.style.overflow = "auto"; };
+    return () => { 
+      clearTimeout(timer);
+      document.body.style.overflow = "auto"; 
+    };
   }, [isOpen]);
 
   if (!isOpen || !mounted) return null;

@@ -1053,7 +1053,7 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
           </div>
           <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 snap-x snap-mandatory">
             {recommendedPlaces.map((place, index) => (
-              <a href={place.slug ? (place.slug.startsWith('http') ? place.slug : `https://www.bobbybaliguide.com${place.slug.startsWith('/') ? place.slug : '/' + place.slug}`) : "#"} key={place.id} className={`block relative rounded-[32px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] group cursor-pointer border border-border shrink-0 snap-center ${index === 0 ? 'w-[85vw] md:w-auto md:col-span-2 aspect-[4/3] md:aspect-[2/1]' : 'w-[200px] md:w-auto aspect-[3/4] md:aspect-square'}`}>
+              <a href={place.slug ? (place.slug.startsWith('http') ? place.slug : `https://www.baliheadtour.com${place.slug.startsWith('/') ? place.slug : '/' + place.slug}`) : "#"} key={place.id} className={`block relative rounded-[32px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] group cursor-pointer border border-border shrink-0 snap-center ${index === 0 ? 'w-[85vw] md:w-auto md:col-span-2 aspect-[4/3] md:aspect-[2/1]' : 'w-[200px] md:w-auto aspect-[3/4] md:aspect-square'}`}>
                 {place.image && <Image src={place.image} alt={place.title || "Place Image"} fill sizes="(max-width: 768px) 50vw, 20vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 

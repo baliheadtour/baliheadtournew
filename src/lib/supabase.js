@@ -7,7 +7,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export const deleteSupabaseFiles = async (urls) => {
   if (!urls || !Array.isArray(urls) || urls.length === 0) return;
-  const bucket = 'discovering_bali_images';
+  const bucket = 'baliheadtour_images';
   
   const paths = urls
     .map(url => {

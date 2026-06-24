@@ -96,24 +96,24 @@ CREATE INDEX IF NOT EXISTS idx_blogs_slug ON public.blogs(slug);
 
 -- Create the public bucket if it doesn't exist
 INSERT INTO storage.buckets (id, name, public) 
-VALUES ('discovering_bali_images', 'discovering_bali_images', true)
+VALUES ('baliheadtour_images', 'baliheadtour_images', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Storage Security Policies
 DROP POLICY IF EXISTS "Public Image Read" ON storage.objects;
 CREATE POLICY "Public Image Read" 
 ON storage.objects FOR SELECT 
-USING (bucket_id = 'discovering_bali_images');
+USING (bucket_id = 'baliheadtour_images');
 
 DROP POLICY IF EXISTS "Authenticated Image Upload" ON storage.objects;
 CREATE POLICY "Authenticated Image Upload" 
 ON storage.objects FOR INSERT 
-WITH CHECK (bucket_id = 'discovering_bali_images' AND auth.role() = 'authenticated');
+WITH CHECK (bucket_id = 'baliheadtour_images' AND auth.role() = 'authenticated');
 
 DROP POLICY IF EXISTS "Public Image Upload (Dev Mode)" ON storage.objects;
 CREATE POLICY "Public Image Upload (Dev Mode)" 
 ON storage.objects FOR INSERT 
-WITH CHECK (bucket_id = 'discovering_bali_images');
+WITH CHECK (bucket_id = 'baliheadtour_images');
 
 -- 4. BOOKINGS TABLE
 CREATE TABLE IF NOT EXISTS public.bookings (

@@ -30,11 +30,11 @@ export default function EditCompanyModal({ item, onClose, onSave }) {
       const filePath = `companies/${fileName}`;
 
       const { error } = await supabase.storage
-        .from('discovering_bali_images')
+        .from('baliheadtour_images')
         .upload(filePath, file);
 
       if (error) throw error;
-      const { data: { publicUrl } } = supabase.storage.from('discovering_bali_images').getPublicUrl(filePath);
+      const { data: { publicUrl } } = supabase.storage.from('baliheadtour_images').getPublicUrl(filePath);
 
       setFormData({ ...formData, image: publicUrl });
     } catch (err) {

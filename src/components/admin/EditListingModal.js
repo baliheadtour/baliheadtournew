@@ -110,11 +110,11 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
       const filePath = `cover_images/${fileName}`;
 
       const { error } = await supabase.storage
-        .from('discovering_bali_images')
+        .from('baliheadtour_images')
         .upload(filePath, file);
 
       if (error) throw error;
-      const { data: { publicUrl } } = supabase.storage.from('discovering_bali_images').getPublicUrl(filePath);
+      const { data: { publicUrl } } = supabase.storage.from('baliheadtour_images').getPublicUrl(filePath);
 
       setFormData({ ...formData, image: publicUrl });
     } catch (err) {
@@ -135,10 +135,10 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
         const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
         const filePath = `gallery/${fileName}`;
 
-        const { error } = await supabase.storage.from('discovering_bali_images').upload(filePath, file);
+        const { error } = await supabase.storage.from('baliheadtour_images').upload(filePath, file);
         if (error) throw error;
         
-        return supabase.storage.from('discovering_bali_images').getPublicUrl(filePath).data.publicUrl;
+        return supabase.storage.from('baliheadtour_images').getPublicUrl(filePath).data.publicUrl;
       }));
 
       const updatedGallery = [...gallery];
@@ -505,7 +505,7 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                         <div className="flex items-center justify-between mb-3">
                            <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block">Enable All-Inclusive Package</label>
-                              <p className="text-[11px] text-gray-400 font-medium mt-1">Allows customers to choose an "All-Inclusive" package that covers everything.</p>
+                              <p className="text-[11px] text-gray-400 font-medium mt-1">Allows customers to choose an &quot;All-Inclusive&quot; package that covers everything.</p>
                            </div>
                            <div onClick={() => setHasAllInclusive(!hasAllInclusive)} className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${hasAllInclusive ? 'bg-[#cce823]' : 'bg-gray-200'}`}>
                              <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${hasAllInclusive ? 'translate-x-6' : ''}`} />
@@ -549,11 +549,11 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                                  <input type="text" value={inclusiveTitle} onChange={(e) => setInclusiveTitle(e.target.value)} className="w-full bg-white text-sm font-semibold text-primary rounded-xl px-4 py-2 border border-gray-200 focus:border-accent outline-none" placeholder="e.g. Ubud Tour - All Inclusive Experience" />
                               </div>
                               <div>
-                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">All-Inclusive What's Included</label>
+                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">All-Inclusive What&apos;s Included</label>
                                  <textarea rows={3} value={inclusiveIncluded} onChange={(e) => setInclusiveIncluded(e.target.value)} className="w-full bg-white text-sm font-semibold text-primary rounded-xl px-4 py-2 border border-gray-200 focus:border-accent outline-none" placeholder="Enter items separated by newlines..." />
                               </div>
                               <div>
-                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">All-Inclusive What's Excluded</label>
+                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">All-Inclusive What&apos;s Excluded</label>
                                  <textarea rows={2} value={inclusiveExcluded} onChange={(e) => setInclusiveExcluded(e.target.value)} className="w-full bg-white text-sm font-semibold text-primary rounded-xl px-4 py-2 border border-gray-200 focus:border-accent outline-none" placeholder="Enter items separated by newlines..." />
                               </div>
                               </div>
@@ -634,11 +634,11 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                 <>
                   <div className="flex gap-4 sm:flex-row flex-col">
                      <div className="flex-[2]">
-                       <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">What's Included</label>
+                       <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">What&apos;s Included</label>
                        <textarea rows="3" name="included" value={details.included} onChange={handleDetailChange} className="w-full bg-gray-50 text-sm font-medium text-gray-600 rounded-xl p-4 border border-gray-200 outline-none focus:border-accent" placeholder="Hotel pickup, guide, water..."></textarea>
                      </div>
                      <div className="flex-[2]">
-                       <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">What's Excluded</label>
+                       <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">What&apos;s Excluded</label>
                        <textarea rows="3" name="excluded" value={details.excluded} onChange={handleDetailChange} className="w-full bg-gray-50 text-sm font-medium text-gray-600 rounded-xl p-4 border border-gray-200 outline-none focus:border-accent" placeholder="Personal expenses, meals not listed..."></textarea>
                      </div>
                      <div className="flex-1">
@@ -689,7 +689,7 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
               {activeTab === "Scooter" && (
                 <div className="flex gap-4 sm:flex-row flex-col">
                    <div className="flex-1">
-                     <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">What's Included</label>
+                     <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">What&apos;s Included</label>
                      <textarea rows="3" name="included" value={details.included} onChange={handleDetailChange} className="w-full bg-gray-50 text-sm font-medium text-gray-600 rounded-xl p-4 border border-gray-200 outline-none focus:border-accent" placeholder="2 Helmets, Raincoat, First Aid..."></textarea>
                    </div>
                    <div className="flex-1">

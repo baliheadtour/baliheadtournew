@@ -11,9 +11,6 @@ export default function BottomNav() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (pathname?.startsWith('/admin')) {
-    return null;
-  }
   const [activeTab, setActiveTab] = useState("home");
 
   const navItems = [
@@ -27,11 +24,15 @@ export default function BottomNav() {
   // Map path to active tab on mount
   React.useEffect(() => {
     if (pathname === "/") setActiveTab("home");
-    else if (pathname.startsWith("/map")) setActiveTab("map");
-    else if (pathname.startsWith("/bookings")) setActiveTab("bookings");
-    else if (pathname.startsWith("/favorites")) setActiveTab("favorites");
-    else if (pathname.startsWith("/profile")) setActiveTab("profile");
+    else if (pathname?.startsWith("/map")) setActiveTab("map");
+    else if (pathname?.startsWith("/bookings")) setActiveTab("bookings");
+    else if (pathname?.startsWith("/favorites")) setActiveTab("favorites");
+    else if (pathname?.startsWith("/profile")) setActiveTab("profile");
   }, [pathname]);
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   // Hide BottomNav on tour detail pages to prevent overlapping with booking bar
   if (pathname.startsWith("/tours/")) return null;

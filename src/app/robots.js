@@ -5,6 +5,6 @@ export default function robots() {
       allow: '/',
       disallow: ['/admin/', '/api/admin/'],
     },
-    sitemap: 'https://www.bobbybaliguide.com/sitemap.xml',
+    sitemap: 'https://www.baliheadtour.com/sitemap.xml',
   }
 }

@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { generateSlug } from "@/lib/utils";
 
 export default async function sitemap() {
-  const baseUrl = "https://www.bobbybaliguide.com";
+  const baseUrl = "https://www.baliheadtour.com";
 
   // Get all active tours
   const { data: listings } = await supabase

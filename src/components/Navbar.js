@@ -137,7 +137,7 @@ export default function Navbar() {
         
         {/* Logo */}
         <Link href="/" className={`font-black tracking-[0.1em] flex-1 flex items-center text-xl md:text-[22px] transition-colors duration-500 ${isScrolled ? 'text-[#1C1C1E]' : 'text-white'}`}>
-          mybalidriver
+          baliheadtour
         </Link>
 
         {/* Center Compressed Search */}

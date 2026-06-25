@@ -5,9 +5,10 @@
   /* Deep dark grey/black used in the reference UI */
   --color-primary-inverse: #ffffff;
 
-  /* Redesign Signature Accent updated to dark teal from screenshot */
-  --color-accent: #004643;
-  --color-accent-hover: #003633;
+  /* Redesign Signature Accent updated to blue with neon green highlights */
+  --color-accent: #2563EB;
+  --color-accent-hover: #1D4ED8;
+  --color-neon-green: #39FF14;
 
   --color-background: #F8F9FA;
   /* Slightly off-white for contrast with white cards */
@@ -137,4 +138,11 @@ body {
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+@layer utilities {
+  .bg-accent {
+    box-shadow: 0 0 10px 2px rgba(57, 255, 20, 0.4), 0 0 4px 1px rgba(57, 255, 20, 0.8) !important;
+    border: 1px solid rgba(57, 255, 20, 0.8) !important;
+  }
 }

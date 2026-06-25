@@ -470,7 +470,7 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
         <div className="md:hidden relative z-40 px-5">
 
           {/* Location Filter (Animated Segmented Control Style) */}
-          <div className="bg-gray-100 border border-gray-200 rounded-[32px] p-1.5 mb-4">
+          <div className="bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-1.5 mb-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
             <div className="flex items-center overflow-x-auto no-scrollbar hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {["All Bali", "Ubud", "Canggu", "Seminyak", "Nusa Penida", "Uluwatu"].map((loc) => {
                 const isActive = (searchQuery.toLowerCase() === loc.toLowerCase()) || (searchQuery === "" && loc === "All Bali");
@@ -480,11 +480,11 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
                     onClick={() => setSearchQuery(loc === "All Bali" ? "" : loc)}
                     className="relative flex items-center justify-center px-5 py-2.5 rounded-[24px] active:scale-95 outline-none shrink-0"
                   >
-                    {/* Animated Sliding Blue Pill */}
+                    {/* Animated Sliding Glass Pill */}
                     {isActive && (
                       <motion.div
                         layoutId="locationActiveIndicator"
-                        className="absolute inset-0 bg-accent rounded-[24px] shadow-sm"
+                        className="absolute inset-0 bg-white shadow-sm border border-black/5 rounded-[24px]"
                         transition={{ type: "spring", stiffness: 400, damping: 28 }}
                       />
                     )}
@@ -492,9 +492,9 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
                     {/* Text Label or Icon */}
                     <div className="relative z-10 flex items-center justify-center">
                       {loc === "All Bali" ? (
-                        <BaliGateIcon isActive={isActive} className={`w-5 h-5 transition-colors duration-300 ${isActive ? 'text-white' : 'text-primary/60 hover:text-primary'}`} />
+                        <BaliGateIcon isActive={isActive} className={`w-5 h-5 transition-colors duration-300 ${isActive ? 'text-[#1C1C1E]' : 'text-primary/60 hover:text-primary'}`} />
                       ) : (
-                        <span className={`text-[14px] tracking-tight whitespace-nowrap transition-colors duration-300 ${isActive ? 'text-white font-extrabold' : 'text-primary/70 font-bold hover:text-primary'}`}>
+                        <span className={`text-[14px] tracking-tight whitespace-nowrap transition-colors duration-300 ${isActive ? 'text-[#1C1C1E] font-extrabold' : 'text-primary/70 font-bold hover:text-primary'}`}>
                           {loc}
                         </span>
                       )}
@@ -996,7 +996,7 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
             <Link href={activeService === "Tour" ? "/tours" : activeService === "Transport" ? "/map" : "/esim"} className="text-sm font-semibold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">See more</Link>
           </div>
           <div className="flex justify-center w-full overflow-hidden">
-            <div className="bg-gray-100 border border-gray-200 rounded-[32px] p-1.5 w-fit max-w-full mx-auto">
+            <div className="bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-1.5 w-fit max-w-full mx-auto shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
               <div className="flex items-center overflow-x-auto no-scrollbar hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {currentCategories.map((c) => {
                   const Icon = c.icon;
@@ -1010,13 +1010,13 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
                       {isActive && (
                         <motion.div
                           layoutId="categoryActiveIndicator"
-                          className="absolute inset-0 bg-accent rounded-[24px] shadow-sm"
+                          className="absolute inset-0 bg-white shadow-sm border border-black/5 rounded-[24px]"
                           transition={{ type: "spring", stiffness: 400, damping: 28 }}
                         />
                       )}
                       <div className="relative z-10 flex items-center justify-center gap-1.5">
-                        {Icon && <Icon size={16} className={`transition-colors duration-300 ${isActive ? 'text-white' : 'text-primary/60 hover:text-primary'}`} strokeWidth={2} />}
-                        <span className={`text-[13px] tracking-tight whitespace-nowrap transition-colors duration-300 ${isActive ? 'text-white font-extrabold' : 'text-primary/70 font-bold hover:text-primary'}`}>
+                        {Icon && <Icon size={16} className={`transition-colors duration-300 ${isActive ? 'text-[#1C1C1E]' : 'text-primary/60 hover:text-primary'}`} strokeWidth={2} />}
+                        <span className={`text-[13px] tracking-tight whitespace-nowrap transition-colors duration-300 ${isActive ? 'text-[#1C1C1E] font-extrabold' : 'text-primary/70 font-bold hover:text-primary'}`}>
                           {c.id}
                         </span>
                       </div>

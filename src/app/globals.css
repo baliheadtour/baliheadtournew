@@ -5,10 +5,10 @@
   /* Deep dark grey/black used in the reference UI */
   --color-primary-inverse: #ffffff;
 
-  /* Redesign Signature Accent updated to blue with neon green highlights */
-  --color-accent: #2563EB;
-  --color-accent-hover: #1D4ED8;
-  --color-neon-green: #39FF14;
+  /* Apple Glass Theme */
+  --color-accent: rgba(255, 255, 255, 0.7);
+  --color-accent-hover: rgba(255, 255, 255, 0.9);
+  --color-neon-green: transparent;
 
   --color-background: #F8F9FA;
   /* Slightly off-white for contrast with white cards */
@@ -142,6 +142,10 @@ body {
 
 @layer utilities {
   .bg-accent {
-    /* Kept intentionally blank since bg-accent color is handled by tailwind */
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
   }
 }

@@ -140,13 +140,12 @@ export default function SplashScreen({ children }) {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white"
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#F5F5F7]"
             style={{ touchAction: "none" }}
           >
-            {/* Soft ambient gradient */}
+            {/* Soft ambient minimalist lighting */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-[#cce823]/8 blur-[120px]" />
-              <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 w-[300px] h-[300px] rounded-full bg-sky-200/20 blur-[100px]" />
+              <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-white/60 blur-[100px]" />
             </div>
 
             {/* Logo container */}
@@ -156,25 +155,28 @@ export default function SplashScreen({ children }) {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10 flex flex-col items-center"
             >
-              <div className="relative mb-8">
+              <div className="relative mb-8 flex items-center justify-center">
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.3, 1], opacity: [0, 0.15, 0] }}
                   transition={{ duration: 2, ease: "easeOut", repeat: Infinity, repeatDelay: 0.5 }}
-                  className="absolute inset-[-16px] rounded-full border-2 border-[#cce823]/30"
+                  className="absolute inset-[-16px] rounded-full border border-black/10"
                 />
-                <img
-                  src="/icon.jpg"
-                  alt="BaliHeadTour"
-                  className="w-[88px] h-[88px] rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.08)] object-contain"
-                />
+                
+                {/* Apple Glass Icon Container */}
+                <div className="w-[88px] h-[88px] rounded-[24px] bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.06)] flex items-center justify-center relative z-10">
+                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                     <circle cx="12" cy="12" r="10"/>
+                     <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                   </svg>
+                </div>
               </div>
 
               <motion.h1
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[#1C1C1E] text-[22px] font-black tracking-tight mb-1.5"
+                className="text-[#1C1C1E] text-[24px] font-bold tracking-tight mb-1.5"
               >
                 baliheadtour
               </motion.h1>
@@ -189,16 +191,16 @@ export default function SplashScreen({ children }) {
               </motion.p>
             </motion.div>
 
-            {/* Progress section */}
+            {/* Apple Style Progress Bar */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.4 }}
-              className="absolute bottom-[14%] flex flex-col items-center gap-3 w-[200px]"
+              className="absolute bottom-[14%] flex flex-col items-center gap-4 w-[200px]"
             >
               <div className="w-full h-[3px] bg-black/5 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#cce823] rounded-full transition-none"
+                  className="h-full bg-[#1C1C1E] rounded-full transition-none"
                   style={{ width: `${progress}%` }}
                 />
               </div>

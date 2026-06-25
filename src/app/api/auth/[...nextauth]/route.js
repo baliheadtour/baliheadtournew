@@ -11,10 +11,10 @@ export const authOptions = {
       },
       async authorize(credentials) {
         if (
-          credentials?.email === "bobbybaliguide@gmail.com" &&
-          credentials?.password === "Poiuytrewq123."
+          credentials?.email === "headtourbali@gmail.com" &&
+          credentials?.password === "Poiuytrewq123"
         ) {
-          return { id: "1", name: "Administrator", email: "bobbybaliguide@gmail.com" };
+          return { id: "1", name: "Administrator", email: "headtourbali@gmail.com" };
         }
         return null;
       }

@@ -71,6 +71,19 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
       return aiPrice;
   };
 
+  const getAllInclusiveFallbackLabel = (pax) => {
+      if (!tourData || !tourData.allInclusiveTiers || tourData.allInclusiveTiers.length === 0) return "";
+      const sortedTiers = [...tourData.allInclusiveTiers].sort((a, b) => Number(b.pax) - Number(a.pax));
+      let aiTier = sortedTiers.find(t => pax >= Number(t.pax));
+      if (!aiTier) {
+         aiTier = sortedTiers[sortedTiers.length - 1];
+         if (pax < Number(aiTier.pax)) {
+            return ` (${aiTier.pax} Person Set)`;
+         }
+      }
+      return "";
+  };
+
   const getTotalPrice = () => {
      if (!tourData) return 0;
      let total = 0;
@@ -699,7 +712,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                       >
                          <div className="flex justify-between items-center mb-1">
                             <span className="font-bold text-primary text-[14px]">All-Inclusive</span>
-                            <span className="text-[12px] font-bold text-accent">USD {getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US')}/pax</span>
+                            <span className="text-[12px] font-bold text-accent">USD {getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US')}{getAllInclusiveFallbackLabel(desktopPax)}/pax</span>
                          </div>
                          <p className="text-[12px] text-text-secondary font-medium">All entrance fees covered. Hassle-free experience.</p>
                       </div>
@@ -806,7 +819,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                    onClick={() => setSelectedPackage('All Inclusive')} 
                    className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg border flex-1 whitespace-nowrap transition-all flex justify-center items-center gap-1 ${selectedPackage === 'All Inclusive' ? 'bg-primary text-white border-primary' : 'bg-white text-primary border-gray-200'}`}
                 >
-                   All-Inclusive <span className={selectedPackage === 'All Inclusive' ? 'text-white/80' : 'text-accent'}>USD {getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US')}</span>
+                   All-Inclusive <span className={selectedPackage === 'All Inclusive' ? 'text-white/80' : 'text-accent'}>USD {getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US')}{getAllInclusiveFallbackLabel(desktopPax)}</span>
                 </button>
              </div>
            )}
@@ -843,7 +856,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                </span>
                <div className="flex items-baseline gap-1.5 truncate">
                <span className={`text-[20px] font-black leading-none tracking-tight truncate ${tourData.service === "Spa" ? "text-[#3d3730] font-serif" : "text-primary"}`}>
-                  {selectedPackage === 'All Inclusive' && (tourData.hasAllInclusive || tourData.allInclusiveSurcharge) ? getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US') : getUnitDynamicPrice().toLocaleString('en-US')}
+                  USD {selectedPackage === 'All Inclusive' && (tourData.hasAllInclusive || tourData.allInclusiveSurcharge) ? getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US') + getAllInclusiveFallbackLabel(desktopPax) : getUnitDynamicPrice().toLocaleString('en-US')}
                </span>
             </div>
           </div>

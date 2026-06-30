@@ -176,7 +176,7 @@ export default function BookingsPage() {
                   </p>
                   
                   <div className="mt-1 font-semibold text-[15px] text-primary">
-                    <span className="font-extrabold text-[15px]">{numericAmount > 0 ? formatIDR(numericAmount) : (typeof b.amount === 'object' ? JSON.stringify(b.amount) : b.amount)}</span>
+                    <span className="font-extrabold text-[15px]">{numericAmount > 0 ? formatUSD(parsePrice(numericAmount)) : (typeof b.amount === 'object' ? JSON.stringify(b.amount) : b.amount)}</span>
                   </div>
 
                   {/* Actions Area */}

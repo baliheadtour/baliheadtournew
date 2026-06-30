@@ -7,7 +7,7 @@ import LocationAutocomplete from "./LocationAutocomplete";
 import { supabase } from "@/lib/supabase";
 import { useSession } from "next-auth/react";
 
-const formatIDR = (num) => `IDR ${Number(num).toLocaleString('id-ID')}`;
+import { parsePrice, formatUSD } from '@/lib/currency';
 
 export default function BookingModal({ isOpen, onClose, serviceData, initialPax = 1, initialDate = "", startStep = 1, onPackageChange, onPaxChange, onDateChange }) {
   const [mounted, setMounted] = useState(false);
@@ -129,11 +129,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
     let total = 0;
     
     // Calculate Total correctly
-      const getMultiplierPrice = (rawPrice) => {
-        const p = Number(rawPrice);
-        if (!p) return 0;
-        return Math.floor(p > 1000 ? p : p * 1000);
-      };
+      const getMultiplierPrice = (rawPrice) => parsePrice(rawPrice);
 
       let pax = parseInt(formData.guests) || 1;
       let basePrice = getMultiplierPrice(serviceData.price);
@@ -171,7 +167,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
          total = basePrice;
       }
       
-      messageDetails += `\n${divider}\n*TOTAL ESTIMATE:* ${formatIDR(total)}`;
+      messageDetails += `\n${divider}\n*TOTAL ESTIMATE:* ${formatUSD(total)}`;
 
     const waUrl = `https://wa.me/6281337993984?text=${encodeURIComponent(messageDetails)}`;
     
@@ -183,7 +179,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
         contact_info: formData.phone,
         service_name: sTitle,
         booking_date: formData.date,
-        amount: formatIDR(total),
+        amount: formatUSD(total),
         status: 'Pending',
         category: serviceData?.type === "tour" ? "Tour" : serviceData?.type === "transport" ? "Transport" : "Activities",
         details: {
@@ -299,11 +295,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                             <span className="font-bold text-primary text-[14px]">All-Inclusive Experience</span>
                             <span className="text-[11px] font-extrabold text-[#1C1C1E] bg-[#cce823] px-2 py-0.5 rounded-md shadow-sm">
                               {(() => {
-                                const getMultiplierPrice = (rawPrice) => {
-                                  const p = Number(rawPrice);
-                                  if (!p) return 0;
-                                  return Math.floor(p > 1000 ? p : p * 1000);
-                                };
+                                const getMultiplierPrice = (rawPrice) => parsePrice(rawPrice);
                                 let pax = parseInt(formData.guests) || 1;
                                 let price = getMultiplierPrice(serviceData.allInclusiveSurcharge);
                                 if (serviceData.allInclusiveTiers && serviceData.allInclusiveTiers.length > 0) {
@@ -444,11 +436,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                <span className="text-[14px] font-bold text-gray-500">Expected Total</span>
                <span className="text-[22px] font-extrabold text-primary">
                  {(() => {
-                    const getMultiplierPrice = (rawPrice) => {
-                      const p = Number(rawPrice);
-                      if (!p) return 0;
-                      return Math.floor(p > 1000 ? p : p * 1000);
-                    };
+                    const getMultiplierPrice = (rawPrice) => parsePrice(rawPrice);
                     let pax = parseInt(formData.guests) || 1;
                     let basePrice = getMultiplierPrice(serviceData.price);
                     
@@ -467,22 +455,22 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                     }
                     
                     if (serviceData.type === 'scooter') {
-                       return formatIDR(basePrice * (parseInt(formData.duration) || 1));
+                       return formatUSD(basePrice * (parseInt(formData.duration) || 1));
                     } else if (["tour", "spa", "transport", "activities"].includes(serviceData?.type?.toLowerCase())) {
                        if (localPackage === 'All Inclusive') {
                           if (serviceData.allInclusiveTiers && serviceData.allInclusiveTiers.length > 0) {
-                             return formatIDR(basePrice);
+                             return formatUSD(basePrice);
                           } else {
-                             return formatIDR(basePrice * pax);
+                             return formatUSD(basePrice * pax);
                           }
                        } else if (serviceData?.tourTiers && serviceData.tourTiers.length > 0) {
-                          return formatIDR(basePrice);
+                          return formatUSD(basePrice);
                        } else {
                           let isGroupPricing = serviceData?.pricingType === "Per Group";
-                          return formatIDR(basePrice * (isGroupPricing ? 1 : pax));
+                          return formatUSD(basePrice * (isGroupPricing ? 1 : pax));
                        }
                     }
-                    return formatIDR(basePrice);
+                    return formatUSD(basePrice);
                  })()}
                </span>
              </div>

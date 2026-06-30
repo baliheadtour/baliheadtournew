@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import { useSession, signIn } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
 import { generateSlug } from "@/lib/utils";
+import { parsePrice } from "@/lib/currency";
 
 const BookingModal = dynamic(() => import("@/components/booking/BookingModal"), { ssr: false });
 
@@ -37,11 +38,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
   const [reviewMessage, setReviewMessage] = useState({ type: '', text: '' });
   const [localReviews, setLocalReviews] = useState(tourData?.reviewsList || []);
 
-  const getMultiplierPrice = (rawPrice) => {
-    const p = Number(rawPrice);
-    if (!p) return 0;
-    return Math.floor(p > 1000 ? p : p * 1000);
-  };
+  const getMultiplierPrice = (rawPrice) => parsePrice(rawPrice);
 
   const getUnitDynamicPrice = () => {
     if (!tourData) return 0;
@@ -632,7 +629,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
           <div className="hidden md:block md:w-[35%] lg:w-[32%]">
             <div className={`sticky top-[120px] rounded-2xl p-6 shadow-lg z-10 w-full ${tourData.service === "Spa" ? "bg-white border border-[#f0ede6]" : "bg-white border border-gray-200"}`}>
                <div className="mb-4 flex items-end gap-1">
-                  <span className={`text-[34px] font-extrabold leading-none ${tourData.service === "Spa" ? "text-[#3d3730] font-serif tracking-tight" : "text-primary"}`}>IDR {getUnitDynamicPrice().toLocaleString('id-ID')}</span>
+                  <span className={`text-[34px] font-extrabold leading-none ${tourData.service === "Spa" ? "text-[#3d3730] font-serif tracking-tight" : "text-primary"}`}>${getUnitDynamicPrice().toLocaleString('en-US')}</span>
                   <span className="text-text-secondary text-[15px] font-medium pb-1">/ {tourData.service === "Spa" ? "treatment" : tourData.service === "Scooter" ? scooterDuration.replace('daily', 'day').replace('weekly', 'week').replace('monthly', 'month') : tourData.pricingType === "Per Group" ? "group" : (tourData.tourTiers && tourData.tourTiers.length > 0 ? "total" : "person")}</span>
                </div>
                
@@ -742,7 +739,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
 
                <div className="flex items-center justify-between mb-6 px-1">
                  <span className="font-bold text-primary text-[16px]">Total</span>
-                 <span className="font-extrabold text-primary text-[24px]">IDR {getTotalPrice().toLocaleString('id-ID')}</span>
+                 <span className="font-extrabold text-primary text-[24px]">${getTotalPrice().toLocaleString('en-US')}</span>
                </div>
 
                <button 

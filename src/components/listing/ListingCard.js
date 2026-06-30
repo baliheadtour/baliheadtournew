@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
+import { parsePrice, formatUSD } from "@/lib/currency";
 
 export default function ListingCard({ item, linkTo }) {
   const { data: session } = useSession();
@@ -70,10 +71,7 @@ export default function ListingCard({ item, linkTo }) {
     }
   };
 
-  const getFormattedPrice = (rawPrice) => {
-    const p = Number(rawPrice);
-    return Math.floor(p > 1000 ? p : p * 1000);
-  };
+  // Removed old getFormattedPrice logic
 
   let basePriceToUse = item.price;
   if (!basePriceToUse || basePriceToUse == 0) {
@@ -93,8 +91,8 @@ export default function ListingCard({ item, linkTo }) {
       }
   }
 
-  const cleanBasePrice = Number(String(basePriceToUse || 0).replace(/[^0-9]/g, ''));
-  const formattedPrice = `IDR ${getFormattedPrice(cleanBasePrice).toLocaleString('id-ID')}`;
+  const cleanBasePrice = parsePrice(basePriceToUse);
+  const formattedPrice = formatUSD(cleanBasePrice);
 
   if (item.service === "Spa") {
     // Determine the prices to show
@@ -167,7 +165,7 @@ export default function ListingCard({ item, linkTo }) {
                    <span className="text-[10px] font-bold text-[#C1A88A] uppercase tracking-widest mb-0.5">{displayPrice.label}</span>
                    <div className="flex items-end gap-1">
                      <span className="font-extrabold text-[15px] sm:text-[16px] text-[#3d3730] tracking-tight leading-none">
-                       {`IDR ${getFormattedPrice(displayPrice.price).toLocaleString('id-ID')}`}
+                       {formatUSD(parsePrice(displayPrice.price))}
                      </span>
                    </div>
                  </>

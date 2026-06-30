@@ -15,7 +15,7 @@ const Marker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { 
 const Polyline = dynamic(() => import("react-leaflet").then(mod => mod.Polyline), { ssr: false });
 const useMap = dynamic(() => import("react-leaflet").then(mod => mod.useMap), { ssr: false });
 
-const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+import { parsePrice, formatUSD } from '@/lib/currency';
 
 const LOCATION_CACHE = {
   'nusa penida': { lat: -8.739184, lng: 115.53112 },
@@ -395,14 +395,14 @@ function MapInterface() {
                        <div className="flex-1 flex flex-col justify-center overflow-hidden">
                          <h3 className="font-bold text-[15px] leading-tight text-[#1C1C1E] mb-1 truncate">{car.title}</h3>
                          <p className="text-[13px] text-[#8F8F99] font-semibold">{car.year ? `Year ${car.year}` : 'Standard Vehicle'}</p>
-                         <div className="text-[11px] text-gray-400 font-bold mt-1">Rp {car.pricePerKm}/km</div>
+                         <div className="text-[11px] text-gray-400 font-bold mt-1">${parsePrice(car.pricePerKm)}/km</div>
                        </div>
                      </div>
                      <div className="flex justify-between items-end border-t border-gray-100 pt-3">
                         <div>
                           <p className="text-[11px] text-[#8F8F99] uppercase tracking-wider font-bold">{routeStats.distanceText} • {routeStats.durationText}</p>
                         </div>
-                        <div className="text-[18px] font-extrabold text-[#1C1C1E]">{formatIDR(finalPrice)}</div>
+                        <div className="text-[18px] font-extrabold text-[#1C1C1E]">{formatUSD(parsePrice(finalPrice))}</div>
                      </div>
                      {isSelected && (
                        <button className="w-full bg-[#cce823] text-[#1C1C1E] font-bold py-3 mt-1 rounded-xl shadow-md active:scale-[0.98] transition-transform flex justify-center items-center gap-2">
@@ -425,7 +425,7 @@ function MapInterface() {
                 <div className="flex-1 flex flex-col justify-center overflow-hidden">
                   <h3 className="font-bold text-[15px] leading-tight text-[#1C1C1E] mb-1 truncate">{tour.name}</h3>
                   <p className="text-[13px] text-[#8F8F99] font-semibold">Available now</p>
-                  <div className="text-[#1C1C1E] font-extrabold mt-1.5">{formatIDR(tour.price)}</div>
+                  <div className="text-[#1C1C1E] font-extrabold mt-1.5">{formatUSD(parsePrice(tour.price))}</div>
                 </div>
                 <div className="w-10 h-10 rounded-full bg-[#cce823] flex justify-center items-center shrink-0 shadow-sm transition-transform active:scale-95 cursor-pointer">
                   <Navigation size={18} className="text-[#1C1C1E]" />

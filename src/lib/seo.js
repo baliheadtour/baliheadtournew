@@ -35,7 +35,7 @@ export function generateTourJsonLd(tour) {
     },
     'offers': {
       '@type': 'Offer',
-      'priceCurrency': 'IDR',
+      'priceCurrency': 'USD',
       'price': minPrice,
       'availability': 'https://schema.org/InStock',
       'url': `${BASE_URL}/tours/${generateSlug(tour.title)}`

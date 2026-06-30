@@ -7,6 +7,7 @@ import { TourIcon, SpaIcon, TransportIcon, ScooterIcon, ThinSparklesIcon, Towels
 import ListingCard from "@/components/listing/ListingCard";
 import Link from "next/link";
 import Image from "next/image";
+import { parsePrice } from "@/lib/currency";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateSlug } from "@/lib/utils";
@@ -951,7 +952,7 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
                     </div>
                     <div className="flex flex-col items-end shrink-0">
                       <span className="font-extrabold text-[15px] text-primary tracking-tight pr-1">
-                        IDR {Number(trip.price > 1000 ? trip.price : trip.price * 1000).toLocaleString('id-ID')}
+                        ${Number(parsePrice(trip.price)).toLocaleString('en-US')}
                       </span>
                     </div>
                   </div>

@@ -4,14 +4,12 @@ import React, { useState, useEffect } from "react";
 import { X, Calendar, MapPin, Users, Phone, User, Clock, ArrowRight, ChevronLeft, Minus, Plus, Check, Info } from "lucide-react";
 import WeeklyCalendar from "./WeeklyCalendar";
 import LocationAutocomplete from "./LocationAutocomplete";
-import { APIProvider } from "@vis.gl/react-google-maps";
 import { supabase } from "@/lib/supabase";
 import { useSession } from "next-auth/react";
 
 const formatIDR = (num) => `IDR ${Number(num).toLocaleString('id-ID')}`;
 
 export default function BookingModal({ isOpen, onClose, serviceData, initialPax = 1, initialDate = "", startStep = 1, onPackageChange, onPaxChange, onDateChange }) {
-  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyBvRg3xJ6dSPKSOwTRSmGUmaEfYRQ5WRCQ";
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState(1);
   const [localPackage, setLocalPackage] = useState("Standard");
@@ -413,28 +411,24 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                 {/* Location (Pickup, Villa, Delivery) */}
                 <div className="flex flex-col gap-2 relative mt-1">
                    <label className="text-[13px] font-bold text-primary ml-1">Hotel / Villa</label>
-                   <APIProvider apiKey={API_KEY}>
-                     <LocationAutocomplete 
-                       value={formData.pickupLocation.name}
-                       onChange={(val) => setFormData(p => ({ ...p, pickupLocation: val }))}
-                       placeholder="e.g. Grand Hyatt Nusa Dua"
-                       icon={MapPin}
-                     />
-                   </APIProvider>
+                   <LocationAutocomplete 
+                     value={formData.pickupLocation.name}
+                     onChange={(val) => setFormData(p => ({ ...p, pickupLocation: val }))}
+                     placeholder="e.g. Grand Hyatt Nusa Dua"
+                     icon={MapPin}
+                   />
                 </div>
 
                 {/* Dropoff Location (Transport only) */}
                 {(serviceData?.type === "transport") && (
                    <div className="flex flex-col gap-2 relative mt-1">
                      <label className="text-[13px] font-bold text-primary ml-1">Drop-off Location</label>
-                     <APIProvider apiKey={API_KEY}>
-                       <LocationAutocomplete 
-                         value={formData.dropoffLocation.name}
-                         onChange={(val) => setFormData(p => ({ ...p, dropoffLocation: val }))}
-                         placeholder="e.g. Ngurah Rai Airport"
-                         icon={MapPin}
-                       />
-                     </APIProvider>
+                     <LocationAutocomplete 
+                       value={formData.dropoffLocation.name}
+                       onChange={(val) => setFormData(p => ({ ...p, dropoffLocation: val }))}
+                       placeholder="e.g. Ngurah Rai Airport"
+                       icon={MapPin}
+                     />
                    </div>
                 )}
               </div>

@@ -1,15 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { APIProvider, Map, AdvancedMarker, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
+import dynamic from "next/dynamic";
 import { Search, MapPin, Navigation, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/utils";
+import LocationAutocomplete from "../booking/LocationAutocomplete";
+import "leaflet/dist/leaflet.css";
 
-// Formatter for IDR
+// Dynamically import react-leaflet components since Leaflet uses window/document
+const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
+const Polyline = dynamic(() => import("react-leaflet").then(mod => mod.Polyline), { ssr: false });
+const useMap = dynamic(() => import("react-leaflet").then(mod => mod.useMap), { ssr: false });
+
 const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
 
-// Local cache to avoid repeated geocoding of the same regions
 const LOCATION_CACHE = {
   'nusa penida': { lat: -8.739184, lng: 115.53112 },
   'mount batur': { lat: -8.239045, lng: 115.377685 },
@@ -24,107 +31,71 @@ const LOCATION_CACHE = {
   'bedugul': { lat: -8.2833, lng: 115.1667 },
   'lovina': { lat: -8.1611, lng: 115.0256 },
   'amed': { lat: -8.3364, lng: 115.6514 },
-  'ulun danu': { lat: -8.2833, lng: 115.1667 } // Mapped to Bedugul per user request
+  'ulun danu': { lat: -8.2833, lng: 115.1667 }
 };
 
 const CATEGORIES = ["Tour", "Transport", "Activities"];
 
 function DirectionsEngine({ routeInfo, setRouteStats }) {
   const map = useMap();
-  const routesLib = useMapsLibrary("routes");
-  const directionsServiceRef = useRef(null);
-  const directionsRendererRef = useRef(null);
+  const [routeLine, setRouteLine] = useState(null);
 
   useEffect(() => {
-    if (!routesLib || !map) return;
-    if (!directionsServiceRef.current) {
-      directionsServiceRef.current = new routesLib.DirectionsService();
-      directionsRendererRef.current = new routesLib.DirectionsRenderer({ 
-        map,
-        suppressMarkers: false,
-        polylineOptions: { strokeColor: "#1E1E24", strokeWeight: 4 }
-      });
-    }
-
-    if (!routeInfo) return;
-
-    directionsServiceRef.current.route(
-      {
-        origin: routeInfo.origin,
-        destination: routeInfo.destination,
-        travelMode: window.google.maps.TravelMode.DRIVING,
-      },
-      (response, status) => {
-        if (status === "OK" && response) {
-          directionsRendererRef.current.setDirections(response);
+    if (!routeInfo || !routeInfo.originCoords || !routeInfo.destinationCoords) return;
+    const fetchRoute = async () => {
+      try {
+        const { originCoords, destinationCoords } = routeInfo;
+        const url = `https://router.project-osrm.org/route/v1/driving/${originCoords[1]},${originCoords[0]};${destinationCoords[1]},${destinationCoords[0]}?overview=full&geometries=geojson`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (data.code === 'Ok' && data.routes.length > 0) {
+          const route = data.routes[0];
+          const latLngs = route.geometry.coordinates.map(c => [c[1], c[0]]);
+          setRouteLine(latLngs);
           
-          const leg = response.routes[0].legs[0];
-          const distKm = typeof leg.distance?.value === "number" ? leg.distance.value / 1000 : 0;
+          const distKm = route.distance / 1000;
+          const distText = distKm.toFixed(1) + ' km';
+          
+          const mins = Math.round(route.duration / 60);
+          const hours = Math.floor(mins / 60);
+          const remainMins = mins % 60;
+          let durationText = '';
+          if (hours > 0) durationText += `${hours}h `;
+          if (remainMins > 0) durationText += `${remainMins}m`;
+          if (!durationText) durationText = '1m';
           
           setRouteStats({
             distKm,
-            distanceText: leg.distance?.text || "",
-            durationText: leg.duration?.text || ""
+            distanceText: distText,
+            durationText: durationText.trim()
+          });
+          
+          import('leaflet').then(L => {
+            const bounds = L.latLngBounds(latLngs);
+            map.fitBounds(bounds, { padding: [50, 50] });
           });
         } else {
-          console.error("Directions request failed due to " + status);
           setRouteStats(null);
+          setRouteLine(null);
         }
+      } catch (err) {
+        console.error("OSRM Error", err);
       }
-    );
-    
-    return () => {
-      if (directionsRendererRef.current) {
-        directionsRendererRef.current.setMap(null);
-        directionsRendererRef.current = null;
-        directionsServiceRef.current = null;
-      }
-    }
-  }, [routeInfo, routesLib, map, setRouteStats]);
+    };
+    fetchRoute();
+  }, [routeInfo, map, setRouteStats]);
 
-  return null;
+  if (!routeLine) return null;
+  return <Polyline positions={routeLine} color="#1E1E24" weight={4} />;
 }
 
-// Inner component for Google Autocomplete Inputs
-function PlaceAutocompleteInput({ placeholder, onPlaceSelect, value, onChange, icon: Icon }) {
-  const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
-  const inputRef = useRef(null);
-  const places = useMapsLibrary("places");
-
-  useEffect(() => {
-    if (!places || !inputRef.current) return;
-    const options = { fields: ["geometry", "name", "formatted_address"], componentRestrictions: { country: "id" } };
-    setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
-  }, [places]);
-
-  useEffect(() => {
-    if (!placeAutocomplete) return;
-    const listener = placeAutocomplete.addListener("place_changed", () => {
-      const place = placeAutocomplete.getPlace();
-      // Prioritize name (like 'Alaya Resort Ubud') over full address.
-      onPlaceSelect(place.name || place.formatted_address || "");
-    });
-    return () => {
-      if (listener && window.google) window.google.maps.event.removeListener(listener);
-    }
-  }, [onPlaceSelect, placeAutocomplete]);
-
-  return (
-    <div className="flex gap-3 items-center bg-[#F4F4F6] px-4 py-3 rounded-xl border border-border/50">
-      {Icon ? <Icon size={14} className="text-secondary stroke-[3]" /> : <div className="w-2.5 h-2.5 rounded-full bg-accent relative after:absolute after:w-0.5 after:h-5 after:bg-border after:top-2.5 after:left-1"></div>}
-      <input 
-        ref={inputRef}
-        type="text" 
-        placeholder={placeholder} 
-        className="flex-1 outline-none font-semibold text-[14px] bg-transparent text-primary"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
-  );
+// Ensure leaflet is loaded for custom icons
+let L;
+if (typeof window !== "undefined") {
+  L = require("leaflet");
 }
 
-// Sub-component wrapper that has child access to APIProvider's hooks
 function MapInterface() {
   const router = useRouter();
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -134,9 +105,6 @@ function MapInterface() {
   const [selectedTransport, setSelectedTransport] = useState(null);
   const [dynamicDestinations, setDynamicDestinations] = useState([]);
   
-  const geocodingLib = useMapsLibrary("geocoding");
-  
-  // States migrated from MapPage
   const [activeMode, setActiveMode] = useState("Tour");
   
   useEffect(() => {
@@ -150,12 +118,10 @@ function MapInterface() {
       try {
         const { supabase } = await import('@/lib/supabase');
         
-        // Fetch All Active Listings
         const { data, error } = await supabase.from('listings').select('*').eq('status', 'Active');
         if (error) throw error;
         
         if (data) {
-           // Parse Transport
            const trans = data.filter(d => d.type === 'Transport');
            setTransportsData(trans.map(d => ({
               id: d.id,
@@ -165,7 +131,6 @@ function MapInterface() {
               pricePerKm: d.pricePerKm || d.data?.pricePerKm || 6500
            })));
 
-           // Parse Tours with Smart Logic Mapping
            const tours = data.filter(d => d.type === 'Tour' || d.type === 'Activities');
            const mappedTours = tours.map(t => {
               let basePrice = t.price || t.data?.price;
@@ -188,7 +153,6 @@ function MapInterface() {
               };
            });
 
-           // 1. Instant local cache matching (no API required)
            const regionMap = new globalThis.Map();
            const unknownTours = [];
 
@@ -213,44 +177,30 @@ function MapInterface() {
              }
            }
            
-           // Show cached pins immediately
            setDynamicDestinations(Array.from(regionMap.values()));
            setDbTours([...mappedTours]);
 
-           // 2. Automatic Pin Detection Logic for unknown regions (requires API)
-           if (geocodingLib && unknownTours.length > 0) {
-             const geocoder = new geocodingLib.Geocoder();
-
+           if (unknownTours.length > 0) {
              for (const t of unknownTours) {
                try {
-                 const result = await new Promise((resolve) => {
-                   geocoder.geocode({ address: `${t.locationRaw}, Bali, Indonesia` }, (results, status) => {
-                     if (status === 'OK' && results[0]) {
-                       let areaName = t.locationRaw;
-                       for (const comp of results[0].address_components) {
-                          if (comp.types.includes("locality") || comp.types.includes("sublocality") || comp.types.includes("administrative_area_level_3")) {
-                             areaName = comp.short_name;
-                             break;
-                          }
-                       }
-                       resolve({
-                         id: areaName.toLowerCase(),
-                         name: areaName,
-                         lat: results[0].geometry.location.lat(),
-                         lng: results[0].geometry.location.lng()
-                       });
-                     } else {
-                       resolve(null);
-                     }
-                   });
-                 });
+                 const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(t.locationRaw + ", Bali")}&format=json&limit=1`);
+                 const results = await res.json();
                  
-                 if (result) {
+                 if (results && results[0]) {
+                   const resultId = t.locationRaw.toLowerCase();
+                   const result = {
+                     id: resultId,
+                     name: t.locationRaw,
+                     lat: parseFloat(results[0].lat),
+                     lng: parseFloat(results[0].lon)
+                   };
                    if (!regionMap.has(result.id)) {
                      regionMap.set(result.id, result);
                    }
                    t.mapRegionId = result.id;
                  }
+                 // Delay to avoid Nominatim rate limit
+                 await new Promise(r => setTimeout(r, 1000));
                } catch (e) {
                  console.error("Geocoding error for", t.locationRaw, e);
                }
@@ -264,62 +214,79 @@ function MapInterface() {
       }
     };
     fetchListings();
-  }, [geocodingLib]);
+  }, []);
 
-  const [pickup, setPickup] = useState("");
-  const [dropoff, setDropoff] = useState("");
+  const [pickup, setPickup] = useState({ name: "", coords: null });
+  const [dropoff, setDropoff] = useState({ name: "", coords: null });
   const [activeRouteInfo, setActiveRouteInfo] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [isTransportMinimized, setIsTransportMinimized] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState(null);
 
   const handleRouteSearch = () => {
-    if (pickup && dropoff) {
-      setActiveRouteInfo({ origin: pickup, destination: dropoff });
+    if (pickup.coords && dropoff.coords) {
+      setActiveRouteInfo({ 
+        origin: pickup.name, 
+        destination: dropoff.name, 
+        originCoords: pickup.coords, 
+        destinationCoords: dropoff.coords 
+      });
       setIsTransportMinimized(true);
+    } else {
+      alert("Please select valid locations from the dropdown");
     }
   };
 
   const showTours = activeMode !== "Transport";
-
   const displayedTours = selectedRegion 
     ? dbTours.filter(t => t.mapRegionId === selectedRegion) 
     : dbTours;
 
+  const createCustomIcon = (dest, isSelected) => {
+    if (!L) return null;
+    const html = `
+      <div class="cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 flex flex-col items-center ${isSelected ? 'scale-110 z-10' : 'opacity-90'}" style="transform: translate(0, -10px)">
+        <div class="px-3.5 py-1.5 rounded-full font-bold text-[13px] shadow-lg whitespace-nowrap transition-colors border ${isSelected ? 'bg-[#cce823] text-[#1C1C1E] border-[#cce823]' : 'bg-white text-[#1C1C1E] border-gray-100'}">
+          ${dest.name}
+        </div>
+        <div class="w-1.5 h-1.5 rounded-full mt-1.5 shadow-sm transition-colors ${isSelected ? 'bg-[#cce823]' : 'bg-gray-400'}"></div>
+      </div>
+    `;
+    return L.divIcon({ html, className: '', iconSize: [0, 0] });
+  };
+
   return (
     <>
-      <Map
-        defaultCenter={{ lat: -8.409518, lng: 115.188919 }}
-        defaultZoom={10}
-        mapId="DEMO_MAP_ID"
-        disableDefaultUI={true}
-        gestureHandling="greedy"
-        onTilesLoaded={() => setMapLoaded(true)}
+      <MapContainer
+        center={[-8.409518, 115.188919]}
+        zoom={10}
+        zoomControl={false}
+        whenReady={() => setMapLoaded(true)}
         style={{ width: '100%', height: '100%' }}
       >
-        {showTours && dynamicDestinations.map((dest) => (
-          <AdvancedMarker 
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        />
+
+        {showTours && L && dynamicDestinations.map((dest) => (
+          <Marker 
             key={dest.id} 
-            position={{ lat: dest.lat, lng: dest.lng }} 
-            onClick={() => setSelectedRegion(dest.id)}
-          >
-            <div className={`cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 flex flex-col items-center ${selectedRegion === dest.id ? 'scale-110 z-10' : 'opacity-90'}`} style={{ transform: 'translate(0, -10px)' }}>
-              <div className={`px-3.5 py-1.5 rounded-full font-bold text-[13px] shadow-lg whitespace-nowrap transition-colors border ${selectedRegion === dest.id ? 'bg-primary text-accent border-primary' : 'bg-white text-primary border-gray-100'}`}>
-                {dest.name}
-              </div>
-              <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shadow-sm transition-colors ${selectedRegion === dest.id ? 'bg-primary' : 'bg-gray-400'}`}></div>
-            </div>
-          </AdvancedMarker>
+            position={[dest.lat, dest.lng]} 
+            icon={createCustomIcon(dest, selectedRegion === dest.id)}
+            eventHandlers={{
+              click: () => setSelectedRegion(dest.id)
+            }}
+          />
         ))}
 
-        {/* Dynamic Directions Render */}
         {activeRouteInfo && <DirectionsEngine routeInfo={activeRouteInfo} setRouteStats={setRouteStats} />}
-      </Map>
+      </MapContainer>
 
       {!mapLoaded && <div className="absolute inset-0 bg-[#E8EAED] animate-pulse flex items-center justify-center -z-10"></div>}
 
       {/* OVERLAY UI */}
-      <div className="absolute top-0 left-0 right-0 p-6 md:p-8 z-10 pt-12 md:pt-14 flex flex-col items-center gap-3 pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 p-6 md:p-8 z-[1000] pt-12 md:pt-14 flex flex-col items-center gap-3 pointer-events-none">
         
         {activeMode === "Transport" ? (
           isTransportMinimized && activeRouteInfo ? (
@@ -327,52 +294,48 @@ function MapInterface() {
               onClick={() => setIsTransportMinimized(false)}
               className="bg-white/95 backdrop-blur-md rounded-full shadow-xl border border-white/50 px-5 py-4 flex items-center gap-4 pointer-events-auto active:scale-[0.98] transition-all text-left w-full max-w-[400px] group"
             >
-              <div className="w-3 h-3 rounded-full bg-accent relative shrink-0 z-10 shadow-[0_0_8px_rgba(217,251,65,0.8)]" />
-              <div className="flex-1 font-bold text-[14.5px] text-primary truncate flex items-center gap-2">
-                <span className="truncate max-w-[40%]">{pickup.split(',')[0]}</span>
-                <span className="text-text-secondary/60">→</span> 
-                <span className="truncate max-w-[40%]">{dropoff.split(',')[0]}</span>
+              <div className="w-3 h-3 rounded-full bg-[#cce823] relative shrink-0 z-10 shadow-[0_0_8px_rgba(204,232,35,0.8)]" />
+              <div className="flex-1 font-bold text-[14.5px] text-[#1C1C1E] truncate flex items-center gap-2">
+                <span className="truncate max-w-[40%]">{pickup.name.split(',')[0]}</span>
+                <span className="text-[#8F8F99]/60">→</span> 
+                <span className="truncate max-w-[40%]">{dropoff.name.split(',')[0]}</span>
               </div>
               <div className="w-8 h-8 rounded-full bg-[#F4F4F6] flex justify-center items-center group-hover:bg-gray-200 transition-colors shrink-0">
-                <Search size={14} className="text-primary" />
+                <Search size={14} className="text-[#1C1C1E]" />
               </div>
             </button>
           ) : (
           <div className="bg-white/95 backdrop-blur-md rounded-[28px] p-5 shadow-2xl border border-white/50 flex flex-col gap-3.5 pointer-events-auto w-full max-w-[400px] animate-in fade-in slide-in-from-top-4 duration-300">
-            {/* Filter Toggle Header for Transport Mode */}
             <div className="flex justify-between items-center px-1 mb-1">
-              <h3 className="font-extrabold text-[16px] text-primary">Discover Ride</h3>
-              <button onClick={() => setFilterOpen(!filterOpen)} className="w-8 h-8 flex items-center justify-center rounded-full bg-border/40 hover:bg-border/80 transition-colors">
-                <SlidersHorizontal size={14} className="text-primary" />
+              <h3 className="font-extrabold text-[16px] text-[#1C1C1E]">Discover Ride</h3>
+              <button onClick={() => setFilterOpen(!filterOpen)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+                <SlidersHorizontal size={14} className="text-[#1C1C1E]" />
               </button>
             </div>
 
-            {/* If filters open, show category picker */}
             {filterOpen && (
               <div className="flex gap-2 pb-2 overflow-x-auto no-scrollbar">
                 {CATEGORIES.map(cat => (
-                  <button key={cat} onClick={() => { setActiveMode(cat); setActiveRouteInfo(null); setFilterOpen(false); }} className="px-4 py-1.5 rounded-full font-bold text-[12px] bg-[#F4F4F6] text-text-secondary active:scale-95">{cat}</button>
+                  <button key={cat} onClick={() => { setActiveMode(cat); setActiveRouteInfo(null); setFilterOpen(false); }} className="px-4 py-1.5 rounded-full font-bold text-[12px] bg-[#F4F4F6] text-[#8F8F99] active:scale-95">{cat}</button>
                 ))}
               </div>
             )}
 
-            <PlaceAutocompleteInput 
+            <LocationAutocomplete 
               placeholder="Pick-up Location..." 
-              value={pickup} 
+              value={pickup.name} 
               onChange={setPickup} 
-              onPlaceSelect={(val) => setPickup(val)} 
             />
-            <PlaceAutocompleteInput 
+            <LocationAutocomplete 
               placeholder="Where to?" 
-              value={dropoff} 
+              value={dropoff.name} 
               onChange={setDropoff} 
-              onPlaceSelect={(val) => setDropoff(val)} 
               icon={MapPin} 
             />
             
             <button 
               onClick={handleRouteSearch}
-              className="w-full bg-primary text-white font-bold py-3.5 rounded-xl shadow-md mt-1 active:scale-[0.98] transition-transform"
+              className="w-full bg-[#1C1C1E] text-white font-bold py-3.5 rounded-xl shadow-md mt-1 active:scale-[0.98] transition-transform"
             >
               Calculate Route
             </button>
@@ -383,29 +346,28 @@ function MapInterface() {
             <div className="bg-white/95 backdrop-blur-md rounded-full flex gap-3 items-center px-4 py-3.5 shadow-xl border border-white/50 relative">
               <button 
                 onClick={() => setFilterOpen(!filterOpen)} 
-                className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full hover:bg-gray-100 text-primary active:scale-95 transition-all"
+                className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full hover:bg-gray-100 text-[#1C1C1E] active:scale-95 transition-all"
               >
                 <span className="font-extrabold text-[14px] tracking-tight">{activeMode}</span>
-                <ChevronDown size={14} className={`text-text-secondary transition-transform duration-300 ${filterOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`text-[#8F8F99] transition-transform duration-300 ${filterOpen ? 'rotate-180' : ''}`} />
               </button>
               
-              <div className="h-5 w-px bg-border/80"></div>
+              <div className="h-5 w-px bg-gray-200"></div>
               
               <input 
                 type="text" 
                 placeholder={`Search ${activeMode.toLowerCase()}s nearby...`}
-                className="flex-1 outline-none font-medium text-[15px] bg-transparent text-primary"
+                className="flex-1 outline-none font-medium text-[15px] bg-transparent text-[#1C1C1E]"
               />
             </div>
             
-            {/* Expanded Dropdown Filters */}
             {filterOpen && (
               <div className="absolute top-[60px] left-0 bg-white/95 backdrop-blur-xl rounded-2xl p-2 shadow-2xl flex flex-col min-w-[140px] border border-white/50 animate-in fade-in zoom-in-95 duration-200">
                 {CATEGORIES.map(cat => (
                   <button 
                     key={cat} 
                     onClick={() => { setActiveMode(cat); setFilterOpen(false); }} 
-                    className={`px-4 py-2.5 rounded-xl font-bold text-[13px] text-left transition-colors ${activeMode === cat ? 'bg-primary text-accent' : 'bg-transparent text-text-secondary hover:bg-gray-50 hover:text-primary'}`}
+                    className={`px-4 py-2.5 rounded-xl font-bold text-[13px] text-left transition-colors ${activeMode === cat ? 'bg-[#1C1C1E] text-[#cce823]' : 'bg-transparent text-[#8F8F99] hover:bg-gray-50 hover:text-[#1C1C1E]'}`}
                   >
                     {cat}
                   </button>
@@ -416,9 +378,8 @@ function MapInterface() {
         )}
       </div>
 
-      {/* Transport Selection Overlay */}
       {activeMode === "Transport" && routeStats && transportsData.length > 0 && (
-        <div className="absolute bottom-[96px] left-0 right-0 z-20 animate-in slide-in-from-bottom-10 fade-in duration-300 pointer-events-none">
+        <div className="absolute bottom-[96px] left-0 right-0 z-[1000] animate-in slide-in-from-bottom-10 fade-in duration-300 pointer-events-none">
           <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar px-6 gap-4 pb-4 pointer-events-auto">
              {transportsData.map(car => {
                 const finalPrice = routeStats.distKm * car.pricePerKm;
@@ -427,24 +388,24 @@ function MapInterface() {
                   <div 
                     key={car.id} 
                     onClick={() => setSelectedTransport(car.id)} 
-                    className={`snap-center shrink-0 w-[calc(100vw-64px)] max-w-[320px] bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-xl flex flex-col gap-3 cursor-pointer transition-all active:scale-[0.98] ${isSelected ? 'border-2 border-primary' : 'border border-white/50'}`}
+                    className={`snap-center shrink-0 w-[calc(100vw-64px)] max-w-[320px] bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-xl flex flex-col gap-3 cursor-pointer transition-all active:scale-[0.98] ${isSelected ? 'border-2 border-[#1C1C1E]' : 'border border-white/50'}`}
                   >
                      <div className="flex items-center gap-4">
                        <img src={car.image || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=400&q=80'} alt={car.title} className="w-20 h-20 rounded-2xl object-cover shrink-0 shadow-sm" />
                        <div className="flex-1 flex flex-col justify-center overflow-hidden">
-                         <h3 className="font-bold text-[15px] leading-tight text-primary mb-1 truncate">{car.title}</h3>
-                         <p className="text-[13px] text-text-secondary font-semibold">{car.year ? `Year ${car.year}` : 'Standard Vehicle'}</p>
+                         <h3 className="font-bold text-[15px] leading-tight text-[#1C1C1E] mb-1 truncate">{car.title}</h3>
+                         <p className="text-[13px] text-[#8F8F99] font-semibold">{car.year ? `Year ${car.year}` : 'Standard Vehicle'}</p>
                          <div className="text-[11px] text-gray-400 font-bold mt-1">Rp {car.pricePerKm}/km</div>
                        </div>
                      </div>
                      <div className="flex justify-between items-end border-t border-gray-100 pt-3">
                         <div>
-                          <p className="text-[11px] text-text-secondary uppercase tracking-wider font-bold">{routeStats.distanceText} • {routeStats.durationText}</p>
+                          <p className="text-[11px] text-[#8F8F99] uppercase tracking-wider font-bold">{routeStats.distanceText} • {routeStats.durationText}</p>
                         </div>
-                        <div className="text-[18px] font-extrabold text-primary">{formatIDR(finalPrice)}</div>
+                        <div className="text-[18px] font-extrabold text-[#1C1C1E]">{formatIDR(finalPrice)}</div>
                      </div>
                      {isSelected && (
-                       <button className="w-full bg-accent text-primary font-bold py-3 mt-1 rounded-xl shadow-md active:scale-[0.98] transition-transform flex justify-center items-center gap-2">
+                       <button className="w-full bg-[#cce823] text-[#1C1C1E] font-bold py-3 mt-1 rounded-xl shadow-md active:scale-[0.98] transition-transform flex justify-center items-center gap-2">
                           Confirm Ride
                        </button>
                      )}
@@ -455,27 +416,26 @@ function MapInterface() {
         </div>
       )}
       
-      {/* Bottom Swipable Tour Cards Overlay */}
       {activeMode !== "Transport" && (
-        <div className="absolute bottom-[96px] left-0 right-0 z-10 w-full animate-in slide-in-from-bottom-10 fade-in duration-300 pointer-events-none">
+        <div className="absolute bottom-[96px] left-0 right-0 z-[1000] w-full animate-in slide-in-from-bottom-10 fade-in duration-300 pointer-events-none">
           <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar px-6 gap-4 pb-4 pointer-events-auto">
             {displayedTours.map((tour) => (
               <div key={tour.id} onClick={() => router.push(`/tours/${generateSlug(tour.name)}`)} className="snap-center shrink-0 w-[calc(100vw-64px)] max-w-[320px] bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-xl flex gap-4 items-center border border-white/50 cursor-pointer active:scale-[0.98] transition-transform">
                 <img src={tour.image} alt={tour.name} className="w-20 h-20 rounded-2xl object-cover shrink-0 shadow-sm" />
                 <div className="flex-1 flex flex-col justify-center overflow-hidden">
-                  <h3 className="font-bold text-[15px] leading-tight text-primary mb-1 truncate">{tour.name}</h3>
-                  <p className="text-[13px] text-text-secondary font-semibold">Available now</p>
-                  <div className="text-primary font-extrabold mt-1.5">{formatIDR(tour.price)}</div>
+                  <h3 className="font-bold text-[15px] leading-tight text-[#1C1C1E] mb-1 truncate">{tour.name}</h3>
+                  <p className="text-[13px] text-[#8F8F99] font-semibold">Available now</p>
+                  <div className="text-[#1C1C1E] font-extrabold mt-1.5">{formatIDR(tour.price)}</div>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-accent flex justify-center items-center shrink-0 shadow-sm transition-transform active:scale-95 cursor-pointer">
-                  <Navigation size={18} className="text-primary" />
+                <div className="w-10 h-10 rounded-full bg-[#cce823] flex justify-center items-center shrink-0 shadow-sm transition-transform active:scale-95 cursor-pointer">
+                  <Navigation size={18} className="text-[#1C1C1E]" />
                 </div>
               </div>
             ))}
             {displayedTours.length === 0 && (
               <div className="snap-center shrink-0 w-[calc(100vw-64px)] max-w-[320px] bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-xl flex flex-col items-center justify-center border border-white/50 text-center">
-                <p className="font-bold text-[15px] text-primary">No tours found here yet.</p>
-                <button onClick={() => setSelectedRegion(null)} className="mt-3 text-[13px] font-bold text-accent bg-primary px-4 py-2 rounded-full">View All Tours</button>
+                <p className="font-bold text-[15px] text-[#1C1C1E]">No tours found here yet.</p>
+                <button onClick={() => setSelectedRegion(null)} className="mt-3 text-[13px] font-bold text-[#cce823] bg-[#1C1C1E] px-4 py-2 rounded-full">View All Tours</button>
               </div>
             )}
           </div>
@@ -486,12 +446,9 @@ function MapInterface() {
 }
 
 export default function MapComponent() {
-  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyBvRg3xJ6dSPKSOwTRSmGUmaEfYRQ5WRCQ";
   return (
     <div className="w-full h-[100dvh] absolute inset-0 z-0">
-      <APIProvider apiKey={API_KEY}>
-        <MapInterface />
-      </APIProvider>
+      <MapInterface />
     </div>
   );
 }

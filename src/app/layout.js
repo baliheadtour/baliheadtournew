@@ -24,8 +24,17 @@ export const metadata = {
     default: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
     template: "%s | BaliHeadTour"
   },
-  description: "Experience the best of Bali and Ubud with BaliHeadTour. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages. Book your unforgettable Bali adventure today!",
-  keywords: ["Bali Private Driver", "Hire Driver in Bali", "Bali Car Charter", "Premium Bali Tours", "Ubud Day Tour", "Nusa Penida Tour Package", "Bali Airport Transfer", "Custom Bali Itinerary", "Local Bali Guide", "Best Driver in Ubud"],
+  description: "Experience the best of Bali with BaliHeadTour. Top-rated private car charters, experienced local drivers, and custom luxury tour packages. Explore Ubud, Seminyak, Uluwatu, Canggu, Nusa Penida, Mount Batur, and more. Book your unforgettable Bali holiday adventure today!",
+  keywords: [
+    "Bali Private Driver", "Hire Driver in Bali", "Bali Car Charter", "Premium Bali Tours", 
+    "Ubud Day Tour", "Nusa Penida Tour Package", "Bali Airport Transfer", "Custom Bali Itinerary", 
+    "Local Bali Guide", "Best Driver in Ubud", "Uluwatu Temple Tour", "Mount Batur Sunrise Trekking", 
+    "Seminyak Shopping Tour", "Canggu Beach Club Tour", "Lempuyang Heaven Gate Tour", 
+    "Bali Water Sports", "ATV Ride Bali", "Bali Swing Ubud", "Tanah Lot Sunset Tour", 
+    "Kintamani Volcano Tour", "Lovina Dolphin Watching", "Jimbaran Seafood Dinner", 
+    "Bali Family Holiday Packages", "Bali Honeymoon Tours", "Affordable Bali Driver",
+    "Bali Transport Services", "English Speaking Driver Bali", "Bali Sightseeing Tours"
+  ],
   authors: [{ name: "BaliHeadTour" }],
   creator: "BaliHeadTour",
   publisher: "BaliHeadTour",
@@ -36,7 +45,7 @@ export const metadata = {
   },
   openGraph: {
     title: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
-    description: "Experience the best of Bali and Ubud with BaliHeadTour. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages.",
+    description: "Experience the best of Bali with BaliHeadTour. Top-rated private car charters, experienced local drivers, and custom luxury tour packages. Explore Ubud, Seminyak, Uluwatu, Canggu, Nusa Penida, Mount Batur, and more.",
     url: "https://www.baliheadtour.com",
     siteName: "BaliHeadTour",
     images: [
@@ -64,7 +73,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
-    description: "Experience the best of Bali and Ubud with BaliHeadTour. Top-rated private car charters, experienced local guides, and bespoke luxury tour packages.",
+    description: "Experience the best of Bali with BaliHeadTour. Top-rated private car charters, experienced local drivers, and custom luxury tour packages. Explore Ubud, Seminyak, Uluwatu, Canggu, Nusa Penida, Mount Batur, and more.",
     images: ["/og-image.jpg"],
   },
 };

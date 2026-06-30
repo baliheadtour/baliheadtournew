@@ -13,6 +13,7 @@ import EditCompanyModal from "../../../components/admin/EditCompanyModal";
 import ReviewModal from "../../../components/admin/ReviewModal";
 import HeroSettingsModal from "../../../components/admin/HeroSettingsModal";
 import { generateSlug } from "@/lib/utils";
+import { parsePrice, formatUSD } from "@/lib/currency";
 
 export default function AdminListings() {
   const [activeTab, setActiveTab] = useState("Tour");
@@ -443,7 +444,7 @@ export default function AdminListings() {
                                             if (vt) dp = vt.price;
                                          }
                                          const cdp = Number(String(dp || 0).replace(/[^0-9]/g, ''));
-                                         return cdp > 1000 ? `${Math.round(cdp / 15000)}` : `${cdp}`;
+                                         return formatUSD(parsePrice(cdp));
                                       })()} {item.duration ? `/ ${item.duration}` : ''}
                                    </div>
                                 </div>
@@ -541,7 +542,7 @@ export default function AdminListings() {
                 <div className="mt-auto flex flex-col sm:flex-row items-start sm:items-end justify-between border-t border-gray-50 pt-4 gap-3 sm:gap-0">
                   <div className="w-full sm:w-auto">
                     <div className="font-black text-[18px] text-primary mb-0.5 tracking-tight">
-                       {cleanDisplayPrice > 1000 ? `${Math.round(cleanDisplayPrice / 15000)}` : `${cleanDisplayPrice}`}
+                       {formatUSD(parsePrice(cleanDisplayPrice))}
                     </div>
                     <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">
                        / {item.pricingType === "Per Group" ? 'GROUP' : 'PERSON'}

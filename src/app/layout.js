@@ -24,6 +24,11 @@ export const metadata = {
     default: "BaliHeadTour | Best Private Drivers & Premium Tours in Bali",
     template: "%s | BaliHeadTour"
   },
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/logo.jpg',
+    apple: '/logo.jpg',
+  },
   description: "Experience the best of Bali with BaliHeadTour. Top-rated private car charters, experienced local drivers, and custom luxury tour packages. Explore Ubud, Seminyak, Uluwatu, Canggu, Nusa Penida, Mount Batur, and more. Book your unforgettable Bali holiday adventure today!",
   keywords: [
     "Bali Private Driver", "Hire Driver in Bali", "Bali Car Charter", "Premium Bali Tours", 

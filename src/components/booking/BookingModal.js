@@ -70,7 +70,8 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
 
   const handleGuestsChange = (newGuests) => {
     const minP = serviceData?.minPax || 1;
-    const finalGuests = Math.max(minP, newGuests);
+    let finalGuests = Math.max(minP, newGuests);
+    if (finalGuests > 5) finalGuests = 5;
     setFormData(prev => ({ ...prev, guests: String(finalGuests) }));
     if (onPaxChange) onPaxChange(finalGuests);
   };
@@ -277,6 +278,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                                 if (serviceData.allInclusiveTiers && serviceData.allInclusiveTiers.length > 0) {
                                   let sortedTiers = [...serviceData.allInclusiveTiers].sort((a, b) => Number(b.pax) - Number(a.pax));
                                   let applicableTier = sortedTiers.find(t => pax >= Number(t.pax));
+                                  if (!applicableTier) applicableTier = sortedTiers[sortedTiers.length - 1];
                                   if (applicableTier) price = getMultiplierPrice(applicableTier.price);
                                 }
                                 return `USD ${price.toLocaleString('en-US')}${(serviceData.allInclusiveTiers && serviceData.allInclusiveTiers.length > 0) ? '' : '/pax'}`;

@@ -64,7 +64,8 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
       let aiPrice = getMultiplierPrice(tourData.allInclusiveSurcharge);
       if (tourData.allInclusiveTiers && tourData.allInclusiveTiers.length > 0) {
           const sortedTiers = [...tourData.allInclusiveTiers].sort((a, b) => Number(b.pax) - Number(a.pax));
-          const aiTier = sortedTiers.find(t => pax >= Number(t.pax));
+          let aiTier = sortedTiers.find(t => pax >= Number(t.pax));
+          if (!aiTier) aiTier = sortedTiers[sortedTiers.length - 1];
           if (aiTier) aiPrice = getMultiplierPrice(aiTier.price);
       }
       return aiPrice;
@@ -726,7 +727,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                  <div className="flex items-center gap-3">
                    <button onClick={() => setDesktopPax(Math.max(tourData.minPax || 1, desktopPax - 1))} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary shadow-sm hover:bg-gray-50 active:scale-95 transition-all"><Minus size={16} strokeWidth={3} /></button>
                    <span className="font-extrabold text-primary text-[15px] w-4 text-center">{desktopPax}</span>
-                   <button onClick={() => setDesktopPax(desktopPax + 1)} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary shadow-sm hover:bg-gray-50 active:scale-95 transition-all"><Plus size={16} strokeWidth={3} /></button>
+                   <button onClick={() => setDesktopPax(Math.min(5, desktopPax + 1))} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary shadow-sm hover:bg-gray-50 active:scale-95 transition-all"><Plus size={16} strokeWidth={3} /></button>
                  </div>
                </div>
 

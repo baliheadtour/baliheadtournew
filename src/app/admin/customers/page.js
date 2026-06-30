@@ -76,7 +76,7 @@ export default function CustomersManagement() {
         email: formData.email,
         phone: formData.phone,
         joined: "Just Now",
-        ltv: "Rp 0",
+        ltv: "$0",
         status: "Active"
       };
       saveCustomers([newCust, ...customers]);

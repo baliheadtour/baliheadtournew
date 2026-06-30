@@ -6,7 +6,7 @@ import { TourIcon, SpaIcon, ScooterIcon, TransportIcon } from "../../components/
 import HeroSettingsModal from "../../components/admin/HeroSettingsModal";
 import { supabase } from "@/lib/supabase";
 
-const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+const formatUSD = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(num);
 
 export default function AdminDashboard() {
   const [activeCategory, setActiveCategory] = useState("Tour");
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
     }, 0);
 
     return [
-      { label: "Gross Revenue", value: revenue > 0 ? formatIDR(revenue) : "Rp 0", trend: "+0.0%", icon: DollarSign },
+      { label: "Gross Revenue", value: revenue > 0 ? formatUSD(revenue) : "$0", trend: "+0.0%", icon: DollarSign },
       { label: "Confirmed Bookings", value: confirmed.length.toString(), trend: "+0.0%", icon: Calendar },
       { label: "Total Participants", value: participants.toString(), trend: "+0.0%", icon: Users },
       { label: "Total Inquiries", value: categoryBookings.length.toString(), trend: "+0.0%", icon: MapPin },

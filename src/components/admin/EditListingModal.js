@@ -471,7 +471,7 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                       <div>
                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">Flat Group Price (IDR)</label>
                         <div className="relative">
-                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                            <input type="number" value={groupPrice} onChange={(e) => setGroupPrice(e.target.value)} className="w-full sm:w-1/2 bg-gray-50 text-sm font-semibold text-primary rounded-xl pl-9 pr-4 py-2 border border-gray-200 focus:border-accent outline-none" />
                         </div>
                       </div>
@@ -481,7 +481,7 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                            <div key={index} className="flex items-center gap-3">
                              <div className="flex-1 bg-gray-50 px-4 py-2 rounded-xl border border-gray-200 text-sm font-bold text-gray-600">Person {tier.pax}</div>
                              <div className="relative flex-[2]">
-                               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                                <input type="number" placeholder="Price" value={tier.price} 
                                       onChange={(e) => {
                                          const newTiers = [...tourTiers];
@@ -522,7 +522,7 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                                      <div key={index} className="flex items-center gap-3">
                                        <div className="flex-1 bg-white px-4 py-2 rounded-xl border border-gray-200 text-sm font-bold text-gray-600">Person {tier.pax}</div>
                                        <div className="relative flex-[2]">
-                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                                          <input type="number" placeholder="Total AI Price" value={tier.price} 
                                                 onChange={(e) => {
                                                    const newTiers = [...allInclusiveTiers];
@@ -566,21 +566,21 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                     <div className="flex-1">
                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">Daily Price (IDR)</label>
                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                           <input type="number" value={scooterPrices.daily} onChange={(e) => setScooterPrices({...scooterPrices, daily: e.target.value})} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" />
                        </div>
                     </div>
                     <div className="flex-1">
                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">Weekly Price (IDR)</label>
                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                           <input type="number" value={scooterPrices.weekly} onChange={(e) => setScooterPrices({...scooterPrices, weekly: e.target.value})} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" />
                        </div>
                     </div>
                     <div className="flex-1">
                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">Monthly Price (IDR)</label>
                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                           <input type="number" value={scooterPrices.monthly} onChange={(e) => setScooterPrices({...scooterPrices, monthly: e.target.value})} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" />
                        </div>
                     </div>
@@ -590,21 +590,21 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                     <div className="flex-1">
                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">60 Mins Price (IDR)</label>
                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                           <input type="number" value={spaPrices.min60} onChange={(e) => setSpaPrices({...spaPrices, min60: e.target.value})} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" placeholder="e.g. 250000" />
                        </div>
                     </div>
                     <div className="flex-1">
                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">90 Mins Price (IDR)</label>
                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                           <input type="number" value={spaPrices.min90} onChange={(e) => setSpaPrices({...spaPrices, min90: e.target.value})} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" placeholder="e.g. 350000" />
                        </div>
                     </div>
                     <div className="flex-1">
                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">120 Mins Price (IDR)</label>
                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                           <input type="number" value={spaPrices.min120} onChange={(e) => setSpaPrices({...spaPrices, min120: e.target.value})} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" placeholder="e.g. 450000" />
                        </div>
                     </div>
@@ -613,7 +613,7 @@ export default function EditListingModal({ item, activeTab, onClose, onSave }) {
                  <div className="w-full sm:w-1/2">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">Price per Km (IDR)</label>
                     <div className="relative">
-                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">$</span>
                        <input type="number" value={transportPricePerKm} onChange={(e) => setTransportPricePerKm(e.target.value)} className="w-full bg-gray-50 text-sm font-bold text-primary rounded-xl pl-10 pr-4 py-2 border border-gray-200 outline-none focus:border-accent" placeholder="e.g. 6500" />
                     </div>
                  </div>

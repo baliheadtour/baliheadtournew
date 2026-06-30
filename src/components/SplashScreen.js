@@ -163,23 +163,8 @@ export default function SplashScreen({ children }) {
                   className="absolute inset-[-16px] rounded-full border border-black/10"
                 />
                 
-                {/* Apple Glass Icon Container */}
-                <div className="w-[88px] h-[88px] rounded-[24px] bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.06)] flex items-center justify-center relative z-10">
-                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                     <circle cx="12" cy="12" r="10"/>
-                     <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-                   </svg>
-                </div>
+                <img src="/logo.jpg" alt="Bali Head Tour" className="w-32 h-auto object-contain relative z-10 mix-blend-multiply" />
               </div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[#1C1C1E] text-[24px] font-bold tracking-tight mb-1.5"
-              >
-                baliheadtour
-              </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 8 }}

@@ -9,9 +9,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           
           <div className="flex flex-col gap-4">
-            <h2 className="text-2xl font-extrabold tracking-tight flex items-center text-primary" style={{ fontFamily: 'var(--font-playfair)' }}>
-              baliheadtour
-            </h2>
+            <Link href="/" className="flex items-center">
+              <img src="/logo.jpg" alt="Bali Head Tour" className="h-16 object-contain mix-blend-multiply" />
+            </Link>
             <p className="text-sm text-text-secondary leading-relaxed max-w-xs">
               Your ultimate premium gateway to explore the magical island of Bali. Discover tours, rentals, and hidden gems seamlessly.
             </p>

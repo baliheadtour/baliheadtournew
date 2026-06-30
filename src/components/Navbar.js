@@ -136,8 +136,8 @@ export default function Navbar() {
       <div className="hidden md:flex container mx-auto px-6 w-full items-center justify-between">
         
         {/* Logo */}
-        <Link href="/" className={`font-black tracking-[0.1em] flex-1 flex items-center text-xl md:text-[22px] transition-colors duration-500 ${isScrolled ? 'text-[#1C1C1E]' : 'text-white'}`}>
-          baliheadtour
+        <Link href="/" className={`flex-1 flex items-center transition-all duration-500`}>
+          <img src="/logo.jpg" alt="Bali Head Tour" className={`h-8 md:h-12 object-contain transition-all duration-500 ${isScrolled ? 'mix-blend-multiply' : 'brightness-0 invert drop-shadow-md'}`} />
         </Link>
 
         {/* Center Compressed Search */}

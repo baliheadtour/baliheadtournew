@@ -177,7 +177,7 @@ export default function AdminLayout({ children }) {
         {/* Brand Header */}
         <div className="h-20 px-6 border-b border-[#E8EAEF] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-             <img src="/icon.jpg" alt="Logo" className="w-8 h-8 rounded-lg object-cover border border-[#E8EAEF]" />
+             <img src="/logo.jpg" alt="Logo" className="w-10 h-10 object-contain mix-blend-multiply" />
              <span className="font-extrabold text-lg tracking-tight">Admin<span className="font-medium text-gray-500">Portal</span></span>
           </div>
           <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-1 text-gray-400 hover:text-[#1C1C1E] transition-colors">

@@ -24,7 +24,7 @@ export function generateTourJsonLd(tour) {
     '@type': 'TouristTrip',
     'name': tour.title,
     'description': getSeoDescription(tour.data?.description || tour.data?.highlights || ""),
-    'image': tour.image || `${BASE_URL}/logo.png`,
+    'image': tour.image || `${BASE_URL}/logo.jpg`,
     'touristType': [
       'Families', 'Couples', 'Solo travelers'
     ],
@@ -58,7 +58,7 @@ export function generateBlogJsonLd(blog) {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     'headline': blog.title,
-    'image': blog.image || `${BASE_URL}/logo.png`,
+    'image': blog.image || `${BASE_URL}/logo.jpg`,
     'datePublished': blog.created_at,
     'dateModified': blog.updated_at || blog.created_at,
     'author': {
@@ -70,7 +70,7 @@ export function generateBlogJsonLd(blog) {
       'name': 'Discovering Bali',
       'logo': {
         '@type': 'ImageObject',
-        'url': `${BASE_URL}/logo.png`
+        'url': `${BASE_URL}/logo.jpg`
       }
     },
     'description': getSeoDescription(blog.meta_description || blog.content)

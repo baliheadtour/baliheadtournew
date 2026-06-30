@@ -222,7 +222,7 @@ export default function ListingCard({ item, linkTo }) {
         </div>
         
         {/* Title */}
-        <h3 className="font-extrabold text-[16px] leading-[1.3] text-primary line-clamp-2 mb-2 group-hover:text-accent transition-colors">
+        <h3 className="font-extrabold text-[16px] leading-[1.3] text-primary line-clamp-2 mb-2 transition-colors">
           {item.title}
         </h3>
         

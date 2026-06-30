@@ -116,6 +116,11 @@ export default function AdminListings() {
          if (urlsToDelete.length > 0) {
            await deleteSupabaseFiles(urlsToDelete);
          }
+         await fetch('/api/revalidate', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ tags: ['listings', 'active-listings'] })
+         });
          setListingsData(prev => ({
            ...prev,
            [activeTab]: prev[activeTab].filter(i => i.id !== item.id)
@@ -131,6 +136,11 @@ export default function AdminListings() {
     const { supabase } = await import('@/lib/supabase');
     const { error } = await supabase.from('listings').update({ status: newStatus }).eq('id', item.id);
     if (!error) {
+       await fetch('/api/revalidate', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ tags: ['listings', 'active-listings'] })
+       });
        setListingsData(prev => ({
          ...prev,
          [activeTab]: prev[activeTab].map(i => i.id === item.id ? { ...i, status: newStatus } : i)
@@ -142,6 +152,11 @@ export default function AdminListings() {
     const { supabase } = await import('@/lib/supabase');
     const { error } = await supabase.from('listings').update({ category: newCategory }).eq('id', item.id);
     if (!error) {
+       await fetch('/api/revalidate', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ tags: ['listings', 'active-listings'] })
+       });
        setListingsData(prev => ({
          ...prev,
          [activeTab]: prev[activeTab].map(i => i.id === item.id ? { ...i, category: newCategory } : i)
@@ -207,6 +222,12 @@ export default function AdminListings() {
     if (urlsToDelete.length > 0) {
        await deleteSupabaseFiles(urlsToDelete);
     }
+
+    await fetch('/api/revalidate', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ tags: ['listings', 'active-listings'] })
+    });
 
     setListingsData(prev => {
       const currentList = prev[activeTab];

@@ -279,7 +279,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                                   let applicableTier = sortedTiers.find(t => pax >= Number(t.pax));
                                   if (applicableTier) price = getMultiplierPrice(applicableTier.price);
                                 }
-                                return `Rp ${price.toLocaleString('id-ID')}${(serviceData.allInclusiveTiers && serviceData.allInclusiveTiers.length > 0) ? '' : '/pax'}`;
+                                return `USD ${price.toLocaleString('en-US')}${(serviceData.allInclusiveTiers && serviceData.allInclusiveTiers.length > 0) ? '' : '/pax'}`;
                               })()}
                             </span>
                          </div>

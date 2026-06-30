@@ -952,7 +952,7 @@ export default function HomeClient({ initialListings = [], initialSettings = nul
                     </div>
                     <div className="flex flex-col items-end shrink-0">
                       <span className="font-extrabold text-[15px] text-primary tracking-tight pr-1">
-                        ${Number(parsePrice(trip.price)).toLocaleString('en-US')}
+                        USD ${Number(parsePrice(trip.price)).toLocaleString('en-US')}
                       </span>
                     </div>
                   </div>

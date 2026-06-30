@@ -13,5 +13,5 @@ export const parsePrice = (rawPrice) => {
 };
 
 export const formatUSD = (num) => {
-  return `$${Number(num).toLocaleString('en-US')}`;
+  return `USD ${Number(num).toLocaleString('en-US')}`;
 };

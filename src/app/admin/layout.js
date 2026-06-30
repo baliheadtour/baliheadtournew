@@ -19,7 +19,7 @@ function AdminLoginScreen({ onLogin }) {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
     
-    if (cleanEmail === "bobbybaliguide@gmail.com" && (cleanPassword === "Poiuytrewq123" || cleanPassword === "Poiuytrewq123.")) {
+    if (cleanEmail === "headtourbali@gmail.com" && cleanPassword === "Poiuytrewq123") {
       localStorage.setItem("admin_auth", "true");
       onLogin();
     } else {
@@ -46,7 +46,7 @@ function AdminLoginScreen({ onLogin }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-[#F8F9FA] border border-[#E8EAEF] rounded-xl px-4 py-3 mt-1 text-sm font-bold outline-none focus:border-[#1C1C1E] transition-colors"
-              placeholder="bobbybaliguide@gmail.com"
+              placeholder="headtourbali@gmail.com"
               required 
             />
           </div>
@@ -339,7 +339,7 @@ export default function AdminLayout({ children }) {
                  </div>
                  <div className="text-center">
                    <h4 className="font-extrabold text-base text-[#1C1C1E]">Bali Head Tour</h4>
-                   <p className="text-[11px] text-gray-500 font-bold">bobbybaliguide@gmail.com</p>
+                   <p className="text-[11px] text-gray-500 font-bold">headtourbali@gmail.com</p>
                  </div>
                </div>
 

@@ -485,9 +485,6 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
            <button form="bookingForm" type="submit" className="w-full bg-accent hover:bg-accent-hover py-4 rounded-2xl flex items-center justify-center gap-2 font-bold text-primary transition-all active:scale-95 text-[16px] shadow-sm">
              {step === 1 ? 'Continue to Details' : 'Confirm Request'} <ArrowRight size={18} strokeWidth={2.5} />
            </button>
-           <p className="text-center text-[12px] font-medium text-gray-400 mt-4 px-4 leading-snug">
-             You will be redirected to WhatsApp to confirm details securely. No payment is required right now.
-           </p>
         </div>
 
       </div>

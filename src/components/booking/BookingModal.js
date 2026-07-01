@@ -13,6 +13,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState(1);
   const [localPackage, setLocalPackage] = useState("Standard");
+  const [guideLanguage, setGuideLanguage] = useState("English");
   const { data: session } = useSession();
   
   // Form State
@@ -93,7 +94,7 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
     }
     
     if (serviceData?.type === "tour") {
-      messageDetails += `\n*GUESTS:* ${formData.guests} Pax\n*PICKUP:* ${formData.pickupLocation.name}`;
+      messageDetails += `\n*GUESTS:* ${formData.guests} Pax\n*GUIDE LANGUAGE:* ${guideLanguage}\n*PICKUP:* ${formData.pickupLocation.name}`;
     } else if (serviceData?.type === "spa") {
       messageDetails += `\n*TIME:* ${formData.time}\n*GUESTS:* ${formData.guests} Pax\n*LOCATION:* ${formData.pickupLocation.name}`;
     } else if (serviceData?.type === "scooter") {
@@ -143,6 +144,9 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
       } else {
          total = basePrice;
       }
+      if (serviceData?.type === 'tour' && guideLanguage !== 'English') {
+          total += 35; // Add flat $35 fee for foreign language guide
+      }
       
       messageDetails += `\n${divider}\n*TOTAL ESTIMATE:* ${formatUSD(total)}`;
 
@@ -167,7 +171,8 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
           pickup_location: formData.pickupLocation.name,
           dropoff_location: formData.dropoffLocation.name,
           customer_email: session?.user?.email || null,
-          image: serviceData?.image || null
+          image: serviceData?.image || null,
+          guide_language: serviceData?.type === "tour" ? guideLanguage : undefined
         }
       });
       if (error) console.error("Failed to save booking to Supabase:", error);
@@ -320,6 +325,30 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                    </div>
                 )}
 
+                {/* Guide Language */}
+                {serviceData?.type === "tour" && (
+                   <div className="flex flex-col gap-3 mt-1">
+                     <span className="font-bold text-primary text-[14px] ml-1">Guide Language</span>
+                     <div className="grid grid-cols-2 gap-2">
+                       {['English', 'French', 'Spanyol', 'Italian'].map((lang) => (
+                         <div 
+                            key={lang}
+                            onClick={() => setGuideLanguage(lang)}
+                            className={`p-3 rounded-2xl border-2 cursor-pointer transition-all flex flex-col gap-1 ${guideLanguage === lang ? 'border-[#cce823] bg-[#cce823]/10' : 'border-[#F4F4F6] bg-[#F4F4F6] hover:border-gray-200'}`}
+                         >
+                            <div className="flex justify-between items-center">
+                               <span className="font-bold text-primary text-[13px]">{lang}</span>
+                               {guideLanguage === lang && <div className="w-4 h-4 rounded-full bg-[#cce823] flex items-center justify-center shadow-sm"><Check size={10} strokeWidth={3} className="text-[#1C1C1E]" /></div>}
+                            </div>
+                            <span className="text-[11px] font-medium text-gray-500">
+                               {lang === 'English' ? 'Included' : '+ USD 35'}
+                            </span>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+                )}
+
                  {/* VW Notification */}
                  {serviceData?.title?.toLowerCase().includes('vw') && parseInt(formData.guests) > 3 && (
                    <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 mt-1 shadow-sm">
@@ -443,9 +472,9 @@ export default function BookingModal({ isOpen, onClose, serviceData, initialPax 
                           }
                        } else if (serviceData?.tourTiers && serviceData.tourTiers.length > 0) {
                           return formatUSD(basePrice);
-                       } else {
+                        } else {
                           let isGroupPricing = serviceData?.pricingType === "Per Group";
-                          return formatUSD(basePrice * (isGroupPricing ? 1 : pax));
+                          return formatUSD(basePrice * (isGroupPricing ? 1 : pax) + (guideLanguage !== 'English' ? 35 : 0));
                        }
                     }
                     return formatUSD(basePrice);

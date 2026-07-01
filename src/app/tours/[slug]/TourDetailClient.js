@@ -856,7 +856,16 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                </span>
                <div className="flex items-baseline gap-1.5 truncate">
                <span className={`text-[20px] font-black leading-none tracking-tight truncate ${tourData.service === "Spa" ? "text-[#3d3730] font-serif" : "text-primary"}`}>
-                  USD {selectedPackage === 'All Inclusive' && (tourData.hasAllInclusive || tourData.allInclusiveSurcharge) ? getAllInclusivePriceForPax(desktopPax).toLocaleString('en-US') + getAllInclusiveFallbackLabel(desktopPax) : getUnitDynamicPrice().toLocaleString('en-US')}
+                  USD {(() => {
+                    let basePriceDisplay = selectedPackage === 'All Inclusive' && (tourData.hasAllInclusive || tourData.allInclusiveSurcharge) ? getAllInclusivePriceForPax(desktopPax) : getUnitDynamicPrice();
+                    const isAllInclusive = tourData?.title?.toLowerCase().includes('all inclusive') || tourData?.title?.toLowerCase().includes('all-inclusive') || tourData?.hasAllInclusive;
+                    
+                    if (isAllInclusive && basePriceDisplay > 0) {
+                        basePriceDisplay = basePriceDisplay / 2;
+                    }
+                    
+                    return basePriceDisplay.toLocaleString('en-US') + (selectedPackage === 'All Inclusive' && (tourData.hasAllInclusive || tourData.allInclusiveSurcharge) ? getAllInclusiveFallbackLabel(desktopPax) : '');
+                  })()}
                </span>
             </div>
           </div>

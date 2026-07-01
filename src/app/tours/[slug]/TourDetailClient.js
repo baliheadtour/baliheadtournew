@@ -19,6 +19,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
   const [activeTab, setActiveTab] = useState("About this activity");
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [desktopPax, setDesktopPax] = useState(tourData?.minPax || 1);
+  const [desktopGuideLanguage, setDesktopGuideLanguage] = useState("English");
   const [desktopDate, setDesktopDate] = useState("");
   const [modalStartStep, setModalStartStep] = useState(1);
   const [spaDuration, setSpaDuration] = useState('min60');
@@ -108,6 +109,11 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
            }
         }
      }
+     
+     if (tourData?.type === "tour" && desktopGuideLanguage !== "English") {
+        total += 35;
+     }
+     
      return total;
   };
 
@@ -723,6 +729,29 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                  </div>
                </div>
 
+               {tourData?.type === "tour" && (
+                 <div className="flex flex-col gap-3 mb-6">
+                   <span className="font-bold text-text-secondary text-[14px] ml-1">Guide Language</span>
+                   <div className="grid grid-cols-2 gap-2">
+                     {['English', 'French', 'Spanyol', 'Italian'].map((lang) => (
+                       <div 
+                          key={lang}
+                          onClick={() => setDesktopGuideLanguage(lang)}
+                          className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 ${desktopGuideLanguage === lang ? 'border-[#cce823] bg-[#cce823]/10' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                       >
+                          <div className="flex justify-between items-center">
+                             <span className="font-bold text-primary text-[13px]">{lang}</span>
+                             {desktopGuideLanguage === lang && <div className="w-4 h-4 rounded-full bg-[#cce823] flex items-center justify-center shadow-sm"><Check size={10} strokeWidth={3} className="text-[#1C1C1E]" /></div>}
+                          </div>
+                          <span className="text-[11px] font-medium text-gray-500">
+                             {lang === 'English' ? 'Included' : '+ USD 35'}
+                          </span>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               )}
+
                {tourData?.title?.toLowerCase().includes('vw') && desktopPax > 3 && (
                  <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 mb-6 shadow-sm">
                    <div className="bg-amber-100 p-1.5 rounded-full shrink-0"><Info className="text-amber-600" size={16} strokeWidth={2.5} /></div>
@@ -882,9 +911,11 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
          }} 
         initialPax={desktopPax}
         initialDate={desktopDate}
+        initialGuideLanguage={desktopGuideLanguage}
         startStep={modalStartStep}
         onPackageChange={setSelectedPackage}
         onPaxChange={setDesktopPax}
+        onGuideLanguageChange={setDesktopGuideLanguage}
         onDateChange={setDesktopDate}
       />
 

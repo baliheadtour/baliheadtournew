@@ -43,28 +43,28 @@ export default function BottomNav() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
-          
+
           if (item.id === "profile" && !session) {
             return (
-              <button 
-                key={item.id} 
+              <button
+                key={item.id}
                 onClick={() => signIn('google')}
                 className="relative flex flex-col items-center justify-center w-10 h-10"
               >
                 {isActive && (
                   <div className="absolute inset-0 bg-accent rounded-full shadow-[0_0_15px_rgba(217,251,65,0.4)]"></div>
                 )}
-                <Icon 
-                  size={22} 
-                  className={`relative z-10 transition-colors duration-300 ${isActive ? "text-primary stroke-[2.5px]" : "text-white/70 hover:text-white"}`} 
+                <Icon
+                  size={22}
+                  className={`relative z-10 transition-colors duration-300 ${isActive ? "text-primary stroke-[2.5px]" : "text-white/70 hover:text-white"}`}
                 />
               </button>
             );
           }
 
           return (
-            <Link 
-              key={item.id} 
+            <Link
+              key={item.id}
               href={item.path}
               onClick={() => setActiveTab(item.id)}
               className="relative flex flex-col items-center justify-center w-10 h-10"
@@ -72,9 +72,9 @@ export default function BottomNav() {
               {isActive && (
                 <div className="absolute inset-0 bg-accent rounded-full shadow-[0_0_15px_rgba(217,251,65,0.4)]"></div>
               )}
-              <Icon 
-                size={22} 
-                className={`relative z-10 transition-colors duration-300 ${isActive ? "text-primary stroke-[2.5px]" : "text-white/70 hover:text-white"}`} 
+              <Icon
+                size={22}
+                className={`relative z-10 transition-colors duration-300 ${isActive ? "text-primary stroke-[2.5px]" : "text-white/70 hover:text-white"}`}
               />
             </Link>
           );

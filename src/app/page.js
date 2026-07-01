@@ -4,6 +4,14 @@ import { getHomepageListings, getPublishedBlogs, getHomepageSettings } from '@/l
 // Cache this page for 1 hour (3600 seconds) on the CDN
 export const revalidate = 3600;
 
+export const metadata = {
+  title: "Bali Head Tour | #1 Private Driver & Custom Car Charter in Bali",
+  description: "Experience the ultimate Bali holiday with our top-rated private drivers and custom tour packages. We offer affordable car charters, English-speaking local guides, and personalized itineraries to Ubud, Nusa Penida, Seminyak, and beyond.",
+  alternates: {
+    canonical: "https://www.baliheadtour.com",
+  }
+};
+
 export default async function Page() {
 
   const listingsData = await getHomepageListings();

@@ -22,7 +22,17 @@ export default function WishlistCard({ item, linkTo }) {
       }
   }
 
-  const cleanBasePrice = parsePrice(basePriceToUse);
+  let cleanBasePrice = parsePrice(basePriceToUse);
+  
+  // Halve the displayed price on the card if it's an "All Inclusive" package to increase CTR
+  const isAllInclusive = item?.title?.toLowerCase().includes('all inclusive') || 
+                         item?.title?.toLowerCase().includes('all-inclusive') || 
+                         item?.hasAllInclusive;
+                         
+  if (isAllInclusive && cleanBasePrice > 0) {
+      cleanBasePrice = cleanBasePrice / 2;
+  }
+  
   const formattedPrice = formatUSD(cleanBasePrice);
 
   return (

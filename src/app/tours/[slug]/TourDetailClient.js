@@ -112,20 +112,17 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
   };
 
   React.useEffect(() => {
-    const checkSaved = async () => {
-      if (session?.user?.email && tourData?.id) {
-         const { data: savedItem } = await supabase
-           .from('bookings')
-           .select('id')
-           .eq('details->>isWishlist', 'true')
-           .eq('details->>customer_email', session.user.email)
-           .eq('details->item->>id', tourData.id)
-           .single();
-         if (savedItem) setIsSaved(true);
-      }
-    };
-    checkSaved();
-  }, [tourData?.id, session]);
+    if (tourData?.id) {
+       try {
+           const saved = JSON.parse(localStorage.getItem('bali_favorites') || '[]');
+           if (saved.some(fav => fav.id === tourData.id)) {
+               setIsSaved(true);
+           }
+       } catch (e) {
+           console.error("Error reading favorites", e);
+       }
+    }
+  }, [tourData]);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -143,43 +140,38 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
     }
   };
 
-  const handleSave = async () => {
-    if (!session?.user) {
-      signIn('google');
-      return;
-    }
-    if (isSaving || !tourData) return;
-    setIsSaving(true);
+  const handleSave = () => {
+    if (!tourData) return;
     
     try {
+      let saved = JSON.parse(localStorage.getItem('bali_favorites') || '[]');
       if (isSaved) {
-        // Remove from wishlist
-        await supabase
-          .from('bookings')
-          .delete()
-          .eq('details->>isWishlist', 'true')
-          .eq('details->>customer_email', session.user.email)
-          .eq('details->item->>id', tourData.id);
+        saved = saved.filter(fav => fav.id !== tourData.id);
         setIsSaved(false);
       } else {
-        // Add to wishlist using bookings table
-        await supabase.from('bookings').insert({
-          id: `FAV-${Date.now()}`,
-          customer_name: session.user.name || session.user.email,
-          contact_info: session.user.email,
-          service_name: tourData.title,
-          booking_date: new Date().toISOString().split('T')[0],
-          amount: "0",
-          status: 'Pending',
-          category: 'Tour',
-          details: { customer_email: session.user.email, item: tourData, image: tourData.images[0], isWishlist: true }
-        });
+        // Prepare simplified item object for the wishlist
+        const simplifiedItem = {
+           id: tourData.id,
+           title: tourData.title,
+           price: tourData.price,
+           image: tourData.images?.[0] || '',
+           badge: tourData.badge || '',
+           category: tourData.category || '',
+           service: tourData.service || '',
+           data: {
+              allInclusiveSurcharge: tourData.allInclusiveSurcharge,
+              tourTiers: tourData.tourTiers,
+              allInclusiveTiers: tourData.allInclusiveTiers,
+              pricingType: tourData.pricingType
+           }
+        };
+        saved.push(simplifiedItem);
         setIsSaved(true);
       }
+      localStorage.setItem('bali_favorites', JSON.stringify(saved));
+      window.dispatchEvent(new Event('favoritesChanged'));
     } catch (err) {
       console.error("Save failed", err);
-    } finally {
-      setIsSaving(false);
     }
   };
 

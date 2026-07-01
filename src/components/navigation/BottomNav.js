@@ -1,33 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import { Home, Map, CalendarCheck, Heart, User } from "lucide-react";
+import { Home, Map, Heart, Instagram } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
 
   const [activeTab, setActiveTab] = useState("home");
 
   const navItems = [
     { id: "home", icon: Home, path: "/" },
     { id: "map", icon: Map, path: "/map" },
-    { id: "bookings", icon: CalendarCheck, path: "/bookings" },
+    { id: "instagram", icon: Instagram, path: "https://www.instagram.com/baliheadtour" },
     { id: "favorites", icon: Heart, path: "/favorites" },
-    { id: "profile", icon: User, path: "/profile" },
   ];
 
   // Map path to active tab on mount
   React.useEffect(() => {
     if (pathname === "/") setActiveTab("home");
     else if (pathname?.startsWith("/map")) setActiveTab("map");
-    else if (pathname?.startsWith("/bookings")) setActiveTab("bookings");
     else if (pathname?.startsWith("/favorites")) setActiveTab("favorites");
-    else if (pathname?.startsWith("/profile")) setActiveTab("profile");
   }, [pathname]);
 
   if (pathname?.startsWith('/admin')) {
@@ -44,21 +39,20 @@ export default function BottomNav() {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
 
-          if (item.id === "profile" && !session) {
+          if (item.id === "instagram") {
             return (
-              <button
+              <a
                 key={item.id}
-                onClick={() => signIn('google')}
-                className="relative flex flex-col items-center justify-center w-10 h-10"
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative flex flex-col items-center justify-center w-10 h-10 group"
               >
-                {isActive && (
-                  <div className="absolute inset-0 bg-accent rounded-full shadow-[0_0_15px_rgba(217,251,65,0.4)]"></div>
-                )}
                 <Icon
                   size={22}
-                  className={`relative z-10 transition-colors duration-300 ${isActive ? "text-primary stroke-[2.5px]" : "text-white/70 hover:text-white"}`}
+                  className="relative z-10 transition-colors duration-300 text-white/70 group-hover:text-white"
                 />
-              </button>
+              </a>
             );
           }
 

@@ -9,69 +9,42 @@ import { supabase } from "@/lib/supabase";
 import { parsePrice, formatUSD } from "@/lib/currency";
 
 export default function ListingCard({ item, linkTo }) {
-  const { data: session } = useSession();
   const [isSaved, setIsSaved] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (session?.user?.email && item?.id) {
-       const checkSaved = async () => {
-          const { data } = await supabase
-            .from('bookings')
-            .select('id')
-            .eq('details->>isWishlist', 'true')
-            .eq('details->>customer_email', session.user.email)
-            .eq('details->item->>id', item.id)
-            .single();
-          if (data) setIsSaved(true);
-       };
-       checkSaved();
+    if (item?.id) {
+       try {
+           const saved = JSON.parse(localStorage.getItem('bali_favorites') || '[]');
+           if (saved.some(fav => fav.id === item.id)) {
+               setIsSaved(true);
+           }
+       } catch (e) {
+           console.error("Error reading favorites", e);
+       }
     }
-  }, [session, item]);
+  }, [item]);
 
-  const handleSave = async (e) => {
+  const handleSave = (e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (!session?.user) {
-      signIn('google');
-      return;
-    }
-    
-    if (isSaving || !item) return;
-    setIsSaving(true);
+    if (!item) return;
     
     try {
+      let saved = JSON.parse(localStorage.getItem('bali_favorites') || '[]');
       if (isSaved) {
-        await supabase
-          .from('bookings')
-          .delete()
-          .eq('details->>isWishlist', 'true')
-          .eq('details->>customer_email', session.user.email)
-          .eq('details->item->>id', item.id);
+        saved = saved.filter(fav => fav.id !== item.id);
         setIsSaved(false);
       } else {
-        await supabase.from('bookings').insert({
-          id: `FAV-${Date.now()}`,
-          customer_name: session.user.name || session.user.email,
-          contact_info: session.user.email,
-          service_name: item.title,
-          booking_date: new Date().toISOString().split('T')[0],
-          amount: "0",
-          status: 'Pending',
-          category: 'Tour',
-          details: { customer_email: session.user.email, item: item, image: item.image, isWishlist: true }
-        });
+        saved.push(item);
         setIsSaved(true);
       }
+      localStorage.setItem('bali_favorites', JSON.stringify(saved));
+      window.dispatchEvent(new Event('favoritesChanged'));
     } catch (err) {
       console.error("Save failed", err);
-    } finally {
-      setIsSaving(false);
     }
   };
-
-  // Removed old getFormattedPrice logic
 
   let basePriceToUse = item.price;
   if (!basePriceToUse || basePriceToUse == 0) {

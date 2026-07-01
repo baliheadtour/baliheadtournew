@@ -7,7 +7,7 @@ export async function POST(req) {
     const { id, name, rating, comment, accessCode, userImage } = body;
 
     // 1. Validate Access Code
-    if (accessCode !== 'MBD-123') {
+    if (accessCode !== 'BHT-123') {
       return NextResponse.json({ error: 'Invalid access code' }, { status: 403 });
     }
 

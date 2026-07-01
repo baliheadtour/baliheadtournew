@@ -110,7 +110,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
         }
      }
      
-     if (tourData?.type === "tour" && desktopGuideLanguage !== "English") {
+     if (tourData?.service?.toLowerCase() === "tour" && desktopGuideLanguage !== "English") {
         total += 35;
      }
      
@@ -729,7 +729,7 @@ export default function TourDetailClient({ tourData, slug, relatedTours }) {
                  </div>
                </div>
 
-               {tourData?.type === "tour" && (
+               {tourData?.service?.toLowerCase() === "tour" && (
                  <div className="flex flex-col gap-3 mb-6">
                    <span className="font-bold text-text-secondary text-[14px] ml-1">Guide Language</span>
                    <div className="grid grid-cols-2 gap-2">
